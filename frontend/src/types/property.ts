@@ -14,4 +14,5 @@ export type PropertyPayload = {
   description: string;
   price: number;
   location: string;
+  images?: File[];
 };

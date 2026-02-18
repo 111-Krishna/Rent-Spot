@@ -5,12 +5,18 @@ import Property from "../models/Property.js";
 export const createProperty = async (req, res) => {
   try {
     const { title, description, price, location } = req.body;
+    const parsedPrice = Number(price);
+
+    if (!title?.trim() || Number.isNaN(parsedPrice)) {
+      return res.status(400).json({ message: "Title and valid price are required" });
+    }
+
     const images = req.files ? req.files.map(file => file.path) : [];
 
     const property = await Property.create({
-      title,
+      title: title.trim(),
       description,
-      price,
+      price: parsedPrice,
       location,
       images,
       createdBy: req.user._id,
