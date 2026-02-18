@@ -53,14 +53,16 @@ const Navbar = () => {
           )}
         </div>
 
-        {/* Mobile toggle */}
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden text-foreground"
-          aria-label="Toggle menu"
-        >
-          {isOpen ? <X size={20} /> : <Menu size={20} />}
-        </button>
+        <div className="flex items-center gap-3 md:hidden">
+          {userId && <UserButton />}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="text-foreground"
+            aria-label="Toggle menu"
+          >
+            {isOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile menu */}
