@@ -1,6 +1,8 @@
 import { FormEvent, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { SignInButton, useAuth } from "@clerk/clerk-react";
+import { ArrowLeft } from "lucide-react";
+import { Link } from "react-router-dom";
+import { SignInButton, UserButton, useAuth } from "@clerk/clerk-react";
 import { propertyApi } from "@/lib/api";
 
 const ListProperty = () => {
@@ -14,7 +16,7 @@ const ListProperty = () => {
     mutationFn: async () => {
       const token = await getToken();
       if (!token) {
-        throw new Error("Please sign in to list your property.");
+        throw new Error("Please sign in with Clerk to list your property.");
       }
 
       return propertyApi.createProperty(
@@ -35,9 +37,19 @@ const ListProperty = () => {
   };
 
   return (
-    <main className="min-h-screen bg-background px-6 py-10 text-foreground md:px-10">
-      <div className="mx-auto max-w-3xl rounded-3xl border border-border bg-card p-8 shadow-2xl">
-        <h1 className="text-4xl font-bold">List your property</h1>
+    <main className="min-h-screen bg-background px-4 py-8 text-foreground md:px-10">
+      <div className="mx-auto mb-6 flex w-full max-w-4xl items-center justify-between">
+        <Link
+          to="/home"
+          className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm hover:border-rose-400"
+        >
+          <ArrowLeft size={16} /> Back
+        </Link>
+        {isSignedIn && <UserButton />}
+      </div>
+
+      <div className="mx-auto max-w-4xl rounded-3xl border border-border bg-card p-6 shadow-2xl md:p-8">
+        <h1 className="text-3xl font-bold md:text-4xl">List your property</h1>
         <p className="mt-2 text-base text-muted-foreground">
           Add a premium home listing with monthly pricing, location and detailed description.
         </p>

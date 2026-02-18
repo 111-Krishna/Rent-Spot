@@ -1,7 +1,8 @@
 import { FormEvent, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { SignInButton, useAuth } from "@clerk/clerk-react";
-import { useParams } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
+import { Link, useParams } from "react-router-dom";
+import { SignInButton, UserButton, useAuth } from "@clerk/clerk-react";
 import { bookingApi, paymentApi, propertyApi } from "@/lib/api";
 
 const PaymentPage = () => {
@@ -55,8 +56,18 @@ const PaymentPage = () => {
   };
 
   return (
-    <main className="min-h-screen bg-background px-4 py-10 text-foreground">
-      <div className="mx-auto max-w-xl rounded-3xl border border-border bg-card p-6 shadow-2xl">
+    <main className="min-h-screen bg-background px-4 py-8 text-foreground md:px-8">
+      <div className="mx-auto mb-6 flex w-full max-w-3xl items-center justify-between">
+        <Link
+          to={id ? `/home/${id}` : "/home"}
+          className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm hover:border-rose-400"
+        >
+          <ArrowLeft size={16} /> Back
+        </Link>
+        {isSignedIn && <UserButton />}
+      </div>
+
+      <div className="mx-auto max-w-3xl rounded-3xl border border-border bg-card p-6 shadow-2xl md:p-8">
         <img
           src={
             property?.images?.[0]
@@ -64,7 +75,7 @@ const PaymentPage = () => {
               : "https://images.unsplash.com/photo-1494526585095-c41746248156?w=1200&q=80"
           }
           alt={property?.title || "Property"}
-          className="h-72 w-full rounded-2xl object-cover"
+          className="h-64 w-full rounded-2xl object-cover md:h-80"
         />
 
         {!isSignedIn && (
@@ -130,7 +141,7 @@ const PaymentPage = () => {
 
           <button
             type="submit"
-            className="h-14 w-full rounded-2xl bg-rose-500 text-4xl font-semibold text-white transition hover:bg-rose-400"
+            className="h-12 w-full rounded-2xl bg-rose-500 text-xl font-semibold text-white transition hover:bg-rose-400 md:text-2xl"
             disabled={payMutation.isPending || !property || !isSignedIn}
           >
             {payMutation.isPending ? "Processing..." : `Pay ₹${property?.price.toLocaleString() || 0}`}
