@@ -26,19 +26,14 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
       </div>
 
       <div className="space-y-2 p-4">
-        <h3 className="line-clamp-1 text-lg font-semibold leading-tight tracking-normal [font-variant-numeric:tabular-nums]">
-          {property.title}
-        </h3>
+        <h3 className="line-clamp-1 text-2xl font-semibold">{property.title}</h3>
         <p className="flex items-center gap-2 text-sm text-muted-foreground">
           <MapPin size={15} /> {property.location || "Unknown location"}
         </p>
         <p className="line-clamp-2 text-sm text-muted-foreground">
           {property.description || "No description provided"}
         </p>
-        <p className="pt-1 text-xl font-semibold text-rose-400 [font-variant-numeric:tabular-nums]">
-          ₹{property.price.toLocaleString()}
-          <span className="text-sm text-muted-foreground">/month</span>
-        </p>
+        <p className="pt-1 text-2xl font-semibold text-rose-400">₹{property.price.toLocaleString()}<span className="text-sm text-muted-foreground">/month</span></p>
       </div>
     </Link>
   );
