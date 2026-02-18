@@ -23,7 +23,7 @@ connectDB();
 const app = express();
 app.use(
   cors({
-    origin: "http://localhost:5173", // ✅ frontend URL, not '*'
+    origin: ["http://localhost:8080", "http://localhost:5173"],
     credentials: true, // ✅ allow cookies / headers
   })
 );
@@ -37,7 +37,6 @@ app.use("/api/auth", authRoutes);
 app.use("/api/properties", propertyRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/payments", paymentRoutes);
-app.use("/api/properties", propertyRoutes);
 
 app.get("/", (req, res) => {
   res.send("API is running...");
