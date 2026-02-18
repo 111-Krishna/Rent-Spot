@@ -3,7 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { Search, UserCircle2, Menu } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import PropertyCard from "@/components/rental/PropertyCard";
-import SearchSuggestions, { SuggestionItem } from "@/components/rental/SearchSuggestions";
+import SearchSuggestions, {
+  SuggestionItem,
+} from "@/components/rental/SearchSuggestions";
 import { propertyApi } from "@/lib/api";
 
 const categories = [
@@ -32,10 +34,16 @@ const categoryKeywords: Record<string, string[]> = {
 
 const Home = () => {
   const [search, setSearch] = useState("");
+  const [showSuggestions, setShowSuggestions] = useState(true);
   const [activeCategory, setActiveCategory] = useState("trending");
   const navigate = useNavigate();
 
-  const { data = [], isLoading, isError, error } = useQuery({
+  const {
+    data = [],
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
     queryKey: ["properties", search],
     queryFn: () => propertyApi.getProperties(search),
   });
@@ -45,7 +53,9 @@ const Home = () => {
 
     return data
       .filter((property) =>
-        `${property.title} ${property.location || ""}`.toLowerCase().includes(search.toLowerCase()),
+        `${property.title} ${property.location || ""}`
+          .toLowerCase()
+          .includes(search.toLowerCase()),
       )
       .slice(0, 6)
       .map((property) => ({
@@ -63,7 +73,8 @@ const Home = () => {
 
     const keywords = categoryKeywords[activeCategory] || [];
     return data.filter((property) => {
-      const normalized = `${property.title} ${property.location || ""} ${property.description || ""}`.toLowerCase();
+      const normalized =
+        `${property.title} ${property.location || ""} ${property.description || ""}`.toLowerCase();
       return keywords.some((keyword) => normalized.includes(keyword));
     });
   }, [data, activeCategory]);
@@ -72,29 +83,46 @@ const Home = () => {
     <main className="min-h-screen bg-background text-foreground">
       <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 md:px-8">
-          <Link to="/home" className="text-lg font-semibold tracking-tight text-rose-400 md:text-xl">
+          <Link
+            to="/home"
+            className="text-lg font-semibold tracking-tight text-rose-400 md:text-xl"
+          >
             Private Property Rental
           </Link>
 
           <div className="relative hidden w-full max-w-xl items-center gap-3 md:flex">
             <input
               value={search}
-              onChange={(event) => setSearch(event.target.value)}
+              onChange={(event) => {
+                setSearch(event.target.value);
+                setShowSuggestions(true);
+              }}
               placeholder="Search by location, title..."
               className="h-12 w-full rounded-full border border-input bg-card px-6"
             />
             <button
               type="button"
               className="inline-flex h-12 items-center gap-2 rounded-full bg-rose-500 px-6 font-medium text-white transition hover:bg-rose-400"
-              onClick={() => navigate(`/home?search=${encodeURIComponent(search)}`)}
+              onClick={() =>
+                navigate(`/home?search=${encodeURIComponent(search)}`)
+              }
             >
               Search <Search size={18} />
             </button>
-            <SearchSuggestions suggestions={suggestions} onPick={setSearch} />
+            {showSuggestions && (
+              <SearchSuggestions
+                suggestions={suggestions}
+                onPick={setSearch}
+                onSelect={() => setShowSuggestions(false)}
+              />
+            )}
           </div>
 
           <div className="flex items-center gap-3">
-            <Link to="/owner/list-property" className="hidden text-sm text-muted-foreground md:block">
+            <Link
+              to="/owner/list-property"
+              className="hidden text-sm text-muted-foreground md:block"
+            >
               List Your Home
             </Link>
             <button className="rounded-full border border-border p-2">
@@ -106,7 +134,7 @@ const Home = () => {
           </div>
         </div>
 
-        <div className="mx-auto overflow-x-auto px-4 pb-3 md:px-8">
+        <div className="flex items-center justify-center mx-auto overflow-x-auto px-4 pb-3 md:px-8">
           <div className="flex min-w-max gap-8 text-sm text-muted-foreground">
             {categories.map((category) => (
               <button
@@ -128,7 +156,9 @@ const Home = () => {
 
       <section className="mx-auto max-w-7xl px-4 py-10 md:px-8">
         {isLoading && <p>Loading properties...</p>}
-        {isError && <p className="text-destructive">{(error as Error).message}</p>}
+        {isError && (
+          <p className="text-destructive">{(error as Error).message}</p>
+        )}
 
         {!isLoading && !isError && filteredProperties.length === 0 && (
           <p className="rounded-xl border border-border bg-card p-6 text-muted-foreground">
