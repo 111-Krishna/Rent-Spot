@@ -1,5 +1,5 @@
 import heroBg from "@/assets/hero-bg.jpg";
-import { useAuth } from "@clerk/clerk-react";
+import { SignInButton, useAuth } from "@clerk/clerk-react";
 
 const Hero = () => {
   const {isSignedIn} = useAuth()
