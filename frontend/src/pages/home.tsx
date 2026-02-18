@@ -4,7 +4,9 @@ import { Menu, Search } from "lucide-react";
 import { SignInButton, UserButton, useAuth } from "@clerk/clerk-react";
 import { useQuery } from "@tanstack/react-query";
 import PropertyCard from "@/components/rental/PropertyCard";
-import SearchSuggestions, { SuggestionItem } from "@/components/rental/SearchSuggestions";
+import SearchSuggestions, {
+  SuggestionItem,
+} from "@/components/rental/SearchSuggestions";
 import { propertyApi } from "@/lib/api";
 
 const categories = [
@@ -38,7 +40,12 @@ const Home = () => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const navigate = useNavigate();
 
-  const { data = [], isLoading, isError, error } = useQuery({
+  const {
+    data = [],
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
     queryKey: ["properties", search],
     queryFn: () => propertyApi.getProperties(search),
   });
@@ -48,7 +55,9 @@ const Home = () => {
 
     return data
       .filter((property) =>
-        `${property.title} ${property.location || ""}`.toLowerCase().includes(search.toLowerCase()),
+        `${property.title} ${property.location || ""}`
+          .toLowerCase()
+          .includes(search.toLowerCase()),
       )
       .slice(0, 6)
       .map((property) => ({
@@ -66,7 +75,8 @@ const Home = () => {
 
     const keywords = categoryKeywords[activeCategory] || [];
     return data.filter((property) => {
-      const normalized = `${property.title} ${property.location || ""} ${property.description || ""}`.toLowerCase();
+      const normalized =
+        `${property.title} ${property.location || ""} ${property.description || ""}`.toLowerCase();
       return keywords.some((keyword) => normalized.includes(keyword));
     });
   }, [data, activeCategory]);
@@ -85,7 +95,10 @@ const Home = () => {
     <main className="min-h-screen bg-background text-foreground">
       <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-3 md:px-8">
-          <Link to="/home" className="text-section-title text-2xl tracking-tight text-foreground md:text-3xl">
+          <Link
+            to="/home"
+            className="text-section-title text-2xl tracking-tight text-foreground md:text-3xl"
+          >
             Private Property Rental
           </Link>
 
@@ -102,35 +115,48 @@ const Home = () => {
               <button
                 type="button"
                 className="inline-flex h-11 items-center gap-2 rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground transition hover:opacity-90 md:h-12 md:px-6 md:text-base"
-                onClick={() => navigate(`/home?search=${encodeURIComponent(search)}`)}
+                onClick={() =>
+                  navigate(`/home?search=${encodeURIComponent(search)}`)
+                }
               >
                 Search <Search size={16} />
               </button>
             </div>
 
             {showSuggestions && (
-              <SearchSuggestions suggestions={suggestions} onPick={handleSuggestionPick} />
+              <SearchSuggestions
+                suggestions={suggestions}
+                onPick={handleSuggestionPick}
+              />
             )}
           </div>
 
           <div className="order-2 flex items-center gap-3 md:order-3">
-            <Link to="/owner/list-property" className="hidden text-sm text-muted-foreground md:block">
+            <Link
+              to="/owner/list-property"
+              className="hidden text-sm text-muted-foreground md:block"
+            >
               List Your Home
             </Link>
-            <button className="rounded-full border border-border p-2" aria-label="menu">
+            <button
+              className="rounded-full border border-border p-2"
+              aria-label="menu"
+            >
               <Menu size={18} />
             </button>
             {isSignedIn ? (
               <UserButton />
             ) : (
               <SignInButton mode="modal">
-                <button className="rounded-full border border-border px-3 py-2 text-xs">Sign In</button>
+                <button className="rounded-full border border-border px-3 py-2 text-xs">
+                  Sign In
+                </button>
               </SignInButton>
             )}
           </div>
         </div>
 
-        <div className="mx-auto overflow-x-auto px-4 pb-3 md:px-8">
+        <div className="flex items-center justify-center mx-auto overflow-x-auto px-4 pb-3 md:px-8">
           <div className="flex min-w-max gap-6 text-sm text-muted-foreground md:gap-8">
             {categories.map((category) => (
               <button
@@ -152,7 +178,9 @@ const Home = () => {
 
       <section className="mx-auto max-w-7xl px-4 py-8 md:px-8 md:py-10">
         {isLoading && <p>Loading properties...</p>}
-        {isError && <p className="text-destructive">{(error as Error).message}</p>}
+        {isError && (
+          <p className="text-destructive">{(error as Error).message}</p>
+        )}
 
         {!isLoading && !isError && filteredProperties.length === 0 && (
           <p className="rounded-xl border border-border bg-card p-6 text-muted-foreground">
