@@ -20,9 +20,12 @@ const Team = () => {
           Department of Computer Science Engineering, Krishnankoil, India
         </p>
 
-        <div className="mt-16 grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {team.map((member) => (
-            <div key={member.name} className="border border-border p-8 bg-background">
+            <div
+              key={member.name}
+              className="rounded-2xl border border-border bg-card p-8 shadow-lg transition hover:-translate-y-1"
+            >
               <p className="text-section-title text-xl text-foreground">{member.name}</p>
               <p className="text-label text-muted-foreground mt-2">{member.role}</p>
               <a
