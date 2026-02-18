@@ -30,32 +30,32 @@ const ListProperty = () => {
 
   return (
     <main className="min-h-screen bg-background px-6 py-10 text-foreground md:px-10">
-      <div className="mx-auto max-w-2xl rounded-xl border border-border bg-card p-6">
-        <h1 className="text-3xl font-bold">List your property</h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Add a new home listing with monthly pricing for renters.
+      <div className="mx-auto max-w-3xl rounded-3xl border border-border bg-card p-8 shadow-2xl">
+        <h1 className="text-4xl font-bold">List your property</h1>
+        <p className="mt-2 text-base text-muted-foreground">
+          Add a premium home listing with monthly pricing, location and detailed description.
         </p>
 
-        <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
+        <form className="mt-8 grid gap-4" onSubmit={handleSubmit}>
           <input
             placeholder="Owner JWT token"
             value={token}
             onChange={(event) => setToken(event.target.value)}
-            className="h-10 w-full rounded-md border border-input bg-background px-3"
+            className="h-12 w-full rounded-xl border border-input bg-background px-4"
             required
           />
           <input
-            placeholder="Title"
+            placeholder="Property title"
             value={title}
             onChange={(event) => setTitle(event.target.value)}
-            className="h-10 w-full rounded-md border border-input bg-background px-3"
+            className="h-12 w-full rounded-xl border border-input bg-background px-4"
             required
           />
           <input
             placeholder="Location"
             value={location}
             onChange={(event) => setLocation(event.target.value)}
-            className="h-10 w-full rounded-md border border-input bg-background px-3"
+            className="h-12 w-full rounded-xl border border-input bg-background px-4"
             required
           />
           <input
@@ -63,28 +63,29 @@ const ListProperty = () => {
             type="number"
             value={price}
             onChange={(event) => setPrice(event.target.value)}
-            className="h-10 w-full rounded-md border border-input bg-background px-3"
+            className="h-12 w-full rounded-xl border border-input bg-background px-4"
             required
           />
           <textarea
-            placeholder="Description"
+            placeholder="Property description"
             value={description}
             onChange={(event) => setDescription(event.target.value)}
-            className="min-h-28 w-full rounded-md border border-input bg-background px-3 py-2"
+            className="min-h-36 w-full rounded-xl border border-input bg-background px-4 py-3"
             required
           />
 
-          <button className="h-10 w-full rounded-md bg-primary text-primary-foreground" disabled={createPropertyMutation.isPending}>
+          <button
+            className="mt-2 h-12 w-full rounded-xl bg-rose-500 text-lg font-semibold text-white transition hover:bg-rose-400"
+            disabled={createPropertyMutation.isPending}
+          >
             {createPropertyMutation.isPending ? "Submitting..." : "Create Listing"}
           </button>
 
           {createPropertyMutation.isSuccess && (
-            <p className="text-sm text-emerald-500">Property listed successfully.</p>
+            <p className="text-sm text-emerald-400">Property listed successfully.</p>
           )}
           {createPropertyMutation.isError && (
-            <p className="text-sm text-destructive">
-              {(createPropertyMutation.error as Error).message}
-            </p>
+            <p className="text-sm text-destructive">{(createPropertyMutation.error as Error).message}</p>
           )}
         </form>
       </div>
