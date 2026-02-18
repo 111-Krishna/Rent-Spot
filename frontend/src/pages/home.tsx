@@ -1,63 +1,67 @@
+import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-
-type Property = {
-  _id: string;
-  title: string;
-  description?: string;
-  location?: string;
-  price: number;
-  images?: string[];
-};
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
-
-const fetchProperties = async (): Promise<Property[]> => {
-  const response = await fetch(`${API_BASE_URL}/api/properties`);
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch properties");
-  }
-
-  return response.json();
-};
+import PropertyCard from "@/components/rental/PropertyCard";
+import SearchSuggestions from "@/components/rental/SearchSuggestions";
+import { propertyApi } from "@/lib/api";
 
 const Home = () => {
-  const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["properties"],
-    queryFn: fetchProperties,
+  const [search, setSearch] = useState("");
+
+  const { data = [], isLoading, isError, error } = useQuery({
+    queryKey: ["properties", search],
+    queryFn: () => propertyApi.getProperties(search),
   });
 
+  const suggestions = useMemo(() => {
+    if (!search.trim()) return [];
+
+    const terms = data
+      .flatMap((property) => [property.title, property.location])
+      .filter(Boolean)
+      .map((value) => value!.trim());
+
+    return [...new Set(terms)]
+      .filter((value) => value.toLowerCase().includes(search.toLowerCase()))
+      .slice(0, 5);
+  }, [data, search]);
+
   return (
-    <main className="min-h-screen bg-background p-6 md:p-10">
-      <div className="mx-auto max-w-5xl">
-        <h1 className="mb-2 text-3xl font-bold">Available Properties</h1>
-        <p className="mb-8 text-muted-foreground">Live data coming from the backend API.</p>
+    <main className="min-h-screen bg-background px-6 py-10 text-foreground md:px-10">
+      <div className="mx-auto max-w-6xl">
+        <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold">Private Property Rental</h1>
+            <p className="text-muted-foreground">Discover, book, and manage modern rental homes.</p>
+          </div>
+          <a
+            href="/owner/list-property"
+            className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
+          >
+            List Your Home
+          </a>
+        </div>
+
+        <div className="relative mb-8">
+          <input
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="Search by title or location..."
+            className="h-11 w-full rounded-md border border-input bg-background px-4"
+          />
+          <SearchSuggestions suggestions={suggestions} onPick={setSearch} />
+        </div>
 
         {isLoading && <p>Loading properties...</p>}
 
-        {isError && (
-          <p className="text-destructive">
-            {(error as Error).message || "Something went wrong while loading properties."}
-          </p>
-        )}
+        {isError && <p className="text-destructive">{(error as Error).message}</p>}
 
-        {data && data.length === 0 && <p>No properties found.</p>}
+        {!isLoading && !isError && data.length === 0 && <p>No properties found for your search.</p>}
 
-        {data && data.length > 0 && (
-          <div className="grid gap-4 sm:grid-cols-2">
-            {data.map((property) => (
-              <article
-                key={property._id}
-                className="rounded-lg border bg-card p-4 text-card-foreground shadow-sm"
-              >
-                <h2 className="text-xl font-semibold">{property.title}</h2>
-                <p className="mt-1 text-sm text-muted-foreground">{property.location || "Unknown location"}</p>
-                <p className="mt-3 text-sm">{property.description || "No description provided."}</p>
-                <p className="mt-4 font-medium">${property.price.toLocaleString()}</p>
-              </article>
-            ))}
-          </div>
-        )}
+        <section className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {data.map((property) => (
+            <PropertyCard key={property._id} property={property} />
+          ))}
+        </section>
       </div>
     </main>
   );
