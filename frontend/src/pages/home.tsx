@@ -85,7 +85,7 @@ const Home = () => {
     <main className="min-h-screen bg-background text-foreground">
       <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-3 md:px-8">
-          <Link to="/home" className="text-lg font-semibold tracking-tight text-rose-400 md:text-xl">
+          <Link to="/home" className="text-section-title text-2xl tracking-tight text-foreground md:text-3xl">
             Private Property Rental
           </Link>
 
@@ -101,7 +101,7 @@ const Home = () => {
               />
               <button
                 type="button"
-                className="inline-flex h-11 items-center gap-2 rounded-full bg-rose-500 px-4 text-sm font-medium text-white transition hover:bg-rose-400 md:h-12 md:px-6 md:text-base"
+                className="inline-flex h-11 items-center gap-2 rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground transition hover:opacity-90 md:h-12 md:px-6 md:text-base"
                 onClick={() => navigate(`/home?search=${encodeURIComponent(search)}`)}
               >
                 Search <Search size={16} />
@@ -139,7 +139,7 @@ const Home = () => {
                 onClick={() => setActiveCategory(category.value)}
                 className={`border-b-2 pb-1 transition ${
                   activeCategory === category.value
-                    ? "border-rose-400 text-foreground"
+                    ? "border-foreground text-foreground"
                     : "border-transparent hover:text-foreground"
                 }`}
               >

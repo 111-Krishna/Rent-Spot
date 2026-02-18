@@ -35,7 +35,7 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
         <p className="line-clamp-2 text-sm text-muted-foreground">
           {property.description || "No description provided"}
         </p>
-        <p className="pt-1 text-xl font-semibold text-rose-400 [font-variant-numeric:tabular-nums]">
+        <p className="pt-1 text-xl font-semibold text-foreground [font-variant-numeric:tabular-nums]">
           ₹{property.price.toLocaleString()}
           <span className="text-sm text-muted-foreground">/month</span>
         </p>

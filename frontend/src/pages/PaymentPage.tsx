@@ -60,7 +60,7 @@ const PaymentPage = () => {
       <div className="mx-auto mb-6 flex w-full max-w-3xl items-center justify-between">
         <Link
           to={id ? `/home/${id}` : "/home"}
-          className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm hover:border-rose-400"
+          className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm hover:border-foreground"
         >
           <ArrowLeft size={16} /> Back
         </Link>
@@ -82,7 +82,7 @@ const PaymentPage = () => {
           <div className="mt-6 rounded-xl border border-border bg-background p-4">
             <p className="mb-3 text-sm text-muted-foreground">Please sign in with Clerk to continue payment.</p>
             <SignInButton mode="modal">
-              <button type="button" className="rounded-lg bg-rose-500 px-4 py-2 text-sm font-medium text-white">
+              <button type="button" className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground">
                 Sign In to Pay
               </button>
             </SignInButton>
@@ -141,7 +141,7 @@ const PaymentPage = () => {
 
           <button
             type="submit"
-            className="h-12 w-full rounded-2xl bg-rose-500 text-xl font-semibold text-white transition hover:bg-rose-400 md:text-2xl"
+            className="h-12 w-full rounded-2xl bg-primary text-xl font-semibold text-primary-foreground transition hover:opacity-90 md:text-2xl"
             disabled={payMutation.isPending || !property || !isSignedIn}
           >
             {payMutation.isPending ? "Processing..." : `Pay ₹${property?.price.toLocaleString() || 0}`}

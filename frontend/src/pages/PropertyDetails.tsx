@@ -37,12 +37,12 @@ const PropertyDetails = () => {
         </Link>
 
         <section>
-          <h1 className="text-4xl font-bold md:text-5xl">{property.title}</h1>
+          <h1 className="text-section-title text-4xl md:text-5xl">{property.title}</h1>
           <div className="mt-3 flex flex-wrap items-center gap-6 text-xl text-muted-foreground">
             <p className="inline-flex items-center gap-2">
               <MapPin size={20} /> {property.location || "Unknown location"}
             </p>
-            <p className="inline-flex items-center gap-2 text-lg font-semibold text-rose-400">
+            <p className="inline-flex items-center gap-2 text-lg font-semibold text-foreground">
               <Tag size={20} /> ₹{property.price.toLocaleString()}/month
             </p>
           </div>
@@ -78,7 +78,7 @@ const PropertyDetails = () => {
             </div>
             <div className="flex items-center justify-between">
               <span className="font-semibold">Price</span>
-              <span className="text-2xl font-semibold text-rose-400 md:text-3xl">₹{property.price.toLocaleString()}/month</span>
+              <span className="text-2xl font-semibold text-foreground md:text-3xl">₹{property.price.toLocaleString()}/month</span>
             </div>
           </div>
         </section>
@@ -87,7 +87,7 @@ const PropertyDetails = () => {
           <button
             type="button"
             onClick={() => navigate(`/home/${property._id}/payment`)}
-            className="rounded-full bg-rose-500 px-10 py-4 text-xl font-semibold text-white shadow-[0_20px_60px_rgba(244,63,94,0.35)] transition hover:bg-rose-400 md:text-2xl"
+            className="rounded-full bg-primary px-10 py-4 text-xl font-semibold text-primary-foreground transition hover:opacity-90 md:text-2xl"
           >
             Book Now — ₹{property.price.toLocaleString()}/month
           </button>

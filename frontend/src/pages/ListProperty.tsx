@@ -41,7 +41,7 @@ const ListProperty = () => {
       <div className="mx-auto mb-6 flex w-full max-w-4xl items-center justify-between">
         <Link
           to="/home"
-          className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm hover:border-rose-400"
+          className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm hover:border-foreground"
         >
           <ArrowLeft size={16} /> Back
         </Link>
@@ -49,7 +49,7 @@ const ListProperty = () => {
       </div>
 
       <div className="mx-auto max-w-4xl rounded-3xl border border-border bg-card p-6 shadow-2xl md:p-8">
-        <h1 className="text-3xl font-bold md:text-4xl">List your property</h1>
+        <h1 className="text-section-title text-3xl md:text-4xl">List your property</h1>
         <p className="mt-2 text-base text-muted-foreground">
           Add a premium home listing with monthly pricing, location and detailed description.
         </p>
@@ -60,7 +60,7 @@ const ListProperty = () => {
               You need to sign in with Clerk before creating a listing.
             </p>
             <SignInButton mode="modal">
-              <button type="button" className="rounded-lg bg-rose-500 px-4 py-2 text-sm font-medium text-white">
+              <button type="button" className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground">
                 Sign In to Continue
               </button>
             </SignInButton>
@@ -99,7 +99,7 @@ const ListProperty = () => {
           />
 
           <button
-            className="mt-2 h-12 w-full rounded-xl bg-rose-500 text-lg font-semibold text-white transition hover:bg-rose-400 disabled:opacity-60"
+            className="mt-2 h-12 w-full rounded-xl bg-primary text-lg font-semibold text-primary-foreground transition hover:opacity-90 disabled:opacity-60"
             disabled={createPropertyMutation.isPending || !isSignedIn}
           >
             {createPropertyMutation.isPending ? "Submitting..." : "Create Listing"}
