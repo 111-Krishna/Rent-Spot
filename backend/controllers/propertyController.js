@@ -5,12 +5,18 @@ import Property from "../models/Property.js";
 export const createProperty = async (req, res) => {
   try {
     const { title, description, price, location } = req.body;
+    const parsedPrice = Number(price);
+
+    if (!title?.trim() || Number.isNaN(parsedPrice)) {
+      return res.status(400).json({ message: "Title and valid price are required" });
+    }
+
     const images = req.files ? req.files.map(file => file.path) : [];
 
     const property = await Property.create({
-      title,
+      title: title.trim(),
       description,
-      price,
+      price: parsedPrice,
       location,
       images,
       createdBy: req.user._id,
@@ -25,7 +31,17 @@ export const createProperty = async (req, res) => {
 // Get all properties
 export const getProperties = async (req, res) => {
   try {
-    const properties = await Property.find();
+    const { search = "" } = req.query;
+    const query = search
+      ? {
+          $or: [
+            { title: { $regex: search, $options: "i" } },
+            { location: { $regex: search, $options: "i" } },
+          ],
+        }
+      : {};
+
+    const properties = await Property.find(query).sort({ createdAt: -1 });
     res.json(properties);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -68,7 +84,7 @@ export const deleteProperty = async (req, res) => {
     const property = await Property.findById(req.params.id);
     if (!property) return res.status(404).json({ message: "Property not found" });
 
-    await property.remove();
+    await property.deleteOne();
     res.json({ message: "Property removed" });
   } catch (error) {
     res.status(500).json({ message: error.message });

@@ -1,56 +1,31 @@
-// controllers/authController.js
-import User from "../models/User.js";
-import jwt from "jsonwebtoken";
-
-// Generate JWT token
-const generateToken = (user) => {
-  return jwt.sign(
-    { id: user._id, role: user.role },
-    process.env.JWT_SECRET,
-    { expiresIn: "7d" }
-  );
-};
-
-// Register new user
-export const registerUser = async (req, res) => {
-  const { name, email, password } = req.body;
+export const getCurrentUser = async (req, res) => {
   try {
-    const userExists = await User.findOne({ email });
-    if (userExists) {
-      return res.status(400).json({ message: "User already exists" });
-    }
-
-    const user = await User.create({ name, email, password });
-    res.status(201).json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      token: generateToken(user),
+    res.json({
+      user: {
+        _id: req.user._id,
+        clerkId: req.user.clerkId,
+        name: req.user.name,
+        email: req.user.email,
+        role: req.user.role,
+      },
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-// Login user
-export const loginUser = async (req, res) => {
-  const { email, password } = req.body;
+export const syncClerkUser = async (req, res) => {
   try {
-    const user = await User.findOne({ email });
-    if (user && (await user.matchPassword(password))) {
-      res.json({
-        user: {
-          _id: user._id,
-          name: user.name,
-          email: user.email,
-          role: user.role,
-        },
-        token: generateToken(user),
-      });
-    } else {
-      res.status(401).json({ message: "Invalid email or password" });
-    }
+    res.json({
+      message: "Clerk user synced successfully",
+      user: {
+        _id: req.user._id,
+        clerkId: req.user.clerkId,
+        name: req.user.name,
+        email: req.user.email,
+        role: req.user.role,
+      },
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
