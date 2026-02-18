@@ -5,7 +5,7 @@ const features = [
   { icon: BarChart3, title: "Demand-Based Pricing", desc: "Algorithms adjust pricing based on seasons, booking density, and user demand" },
   { icon: CreditCard, title: "Razorpay Payments", desc: "Secure payment processing with encrypted transaction handling" },
   { icon: Users, title: "Multi-Role System", desc: "Distinct interfaces for guests, property owners, and administrators" },
-  { icon: Lock, title: "JWT Authentication", desc: "Secure user sessions with JSON Web Token-based authentication" },
+  { icon: Lock, title: "Clerk Authentication", desc: "Secure user sessions with Clerk-managed authentication and tokens" },
   { icon: Globe, title: "RESTful APIs", desc: "Clean API architecture connecting React frontend with Express.js backend" },
 ];
 
