@@ -73,21 +73,6 @@ export const protect = async (req, res, next) => {
   const token = authHeader.split(" ")[1];
 
   try {
-    if (process.env.JWT_SECRET) {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-      req.user = await User.findById(decoded.id).select("-password");
-      if (!req.user) {
-        return res.status(401).json({ message: "User not found" });
-      }
-
-      return next();
-    }
-  } catch (_error) {
-    // Fall back to Clerk token verification.
-  }
-
-  try {
     const payload = await verifyClerkToken(token);
 
     req.user = await findOrCreateClerkUser(payload);
@@ -98,6 +83,6 @@ export const protect = async (req, res, next) => {
 
     return next();
   } catch (_error) {
-    return res.status(401).json({ message: "Not authorized, token failed" });
+    return res.status(401).json({ message: "Not authorized, Clerk token failed" });
   }
 };
