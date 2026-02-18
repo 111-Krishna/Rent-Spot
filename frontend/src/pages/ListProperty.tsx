@@ -1,23 +1,17 @@
 import { FormEvent, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { SignInButton, useAuth } from "@clerk/clerk-react";
 import { propertyApi } from "@/lib/api";
 
 const ListProperty = () => {
-  const { isSignedIn, getToken } = useAuth();
+  const [token, setToken] = useState(localStorage.getItem("authToken") || "");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [location, setLocation] = useState("");
   const [price, setPrice] = useState("");
 
   const createPropertyMutation = useMutation({
-    mutationFn: async () => {
-      const token = await getToken();
-      if (!token) {
-        throw new Error("Please sign in to list your property.");
-      }
-
-      return propertyApi.createProperty(
+    mutationFn: () =>
+      propertyApi.createProperty(
         {
           title,
           description,
@@ -25,12 +19,12 @@ const ListProperty = () => {
           price: Number(price),
         },
         token,
-      );
-    },
+      ),
   });
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    localStorage.setItem("authToken", token);
     createPropertyMutation.mutate();
   };
 
@@ -42,20 +36,14 @@ const ListProperty = () => {
           Add a premium home listing with monthly pricing, location and detailed description.
         </p>
 
-        {!isSignedIn && (
-          <div className="mt-6 rounded-xl border border-border bg-background p-4">
-            <p className="mb-3 text-sm text-muted-foreground">
-              You need to sign in with Clerk before creating a listing.
-            </p>
-            <SignInButton mode="modal">
-              <button type="button" className="rounded-lg bg-rose-500 px-4 py-2 text-sm font-medium text-white">
-                Sign In to Continue
-              </button>
-            </SignInButton>
-          </div>
-        )}
-
         <form className="mt-8 grid gap-4" onSubmit={handleSubmit}>
+          <input
+            placeholder="Owner JWT token"
+            value={token}
+            onChange={(event) => setToken(event.target.value)}
+            className="h-12 w-full rounded-xl border border-input bg-background px-4"
+            required
+          />
           <input
             placeholder="Property title"
             value={title}
@@ -87,8 +75,8 @@ const ListProperty = () => {
           />
 
           <button
-            className="mt-2 h-12 w-full rounded-xl bg-rose-500 text-lg font-semibold text-white transition hover:bg-rose-400 disabled:opacity-60"
-            disabled={createPropertyMutation.isPending || !isSignedIn}
+            className="mt-2 h-12 w-full rounded-xl bg-rose-500 text-lg font-semibold text-white transition hover:bg-rose-400"
+            disabled={createPropertyMutation.isPending}
           >
             {createPropertyMutation.isPending ? "Submitting..." : "Create Listing"}
           </button>
