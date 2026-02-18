@@ -7,19 +7,32 @@ import SearchSuggestions, { SuggestionItem } from "@/components/rental/SearchSug
 import { propertyApi } from "@/lib/api";
 
 const categories = [
-  "Trending",
-  "Houses",
-  "Rooms",
-  "Farm Houses",
-  "Pool Houses",
-  "Tent Houses",
-  "Cabins",
-  "Shops",
-  "Forest Houses",
+  { label: "Trending", value: "trending" },
+  { label: "Houses", value: "houses" },
+  { label: "Rooms", value: "rooms" },
+  { label: "Farm Houses", value: "farm-houses" },
+  { label: "Pool Houses", value: "pool-houses" },
+  { label: "Tent Houses", value: "tent-houses" },
+  { label: "Cabins", value: "cabins" },
+  { label: "Shops", value: "shops" },
+  { label: "Forest Houses", value: "forest-houses" },
 ];
+
+const categoryKeywords: Record<string, string[]> = {
+  trending: [],
+  houses: ["house", "home", "villa", "flat", "apartment", "bungalow"],
+  rooms: ["room", "studio", "hostel"],
+  "farm-houses": ["farm", "farmhouse"],
+  "pool-houses": ["pool"],
+  "tent-houses": ["tent", "camp"],
+  cabins: ["cabin", "hut", "cottage"],
+  shops: ["shop", "store", "retail"],
+  "forest-houses": ["forest", "woods", "nature"],
+};
 
 const Home = () => {
   const [search, setSearch] = useState("");
+  const [activeCategory, setActiveCategory] = useState("trending");
   const navigate = useNavigate();
 
   const { data = [], isLoading, isError, error } = useQuery({
@@ -42,6 +55,18 @@ const Home = () => {
         price: property.price,
       }));
   }, [data, search]);
+
+  const filteredProperties = useMemo(() => {
+    if (activeCategory === "trending") {
+      return data;
+    }
+
+    const keywords = categoryKeywords[activeCategory] || [];
+    return data.filter((property) => {
+      const normalized = `${property.title} ${property.location || ""} ${property.description || ""}`.toLowerCase();
+      return keywords.some((keyword) => normalized.includes(keyword));
+    });
+  }, [data, activeCategory]);
 
   return (
     <main className="min-h-screen bg-background text-foreground">
@@ -84,8 +109,17 @@ const Home = () => {
         <div className="mx-auto overflow-x-auto px-4 pb-3 md:px-8">
           <div className="flex min-w-max gap-8 text-sm text-muted-foreground">
             {categories.map((category) => (
-              <button key={category} type="button" className="transition hover:text-foreground">
-                {category}
+              <button
+                key={category.value}
+                type="button"
+                onClick={() => setActiveCategory(category.value)}
+                className={`border-b-2 pb-1 transition ${
+                  activeCategory === category.value
+                    ? "border-rose-400 text-foreground"
+                    : "border-transparent hover:text-foreground"
+                }`}
+              >
+                {category.label}
               </button>
             ))}
           </div>
@@ -96,14 +130,14 @@ const Home = () => {
         {isLoading && <p>Loading properties...</p>}
         {isError && <p className="text-destructive">{(error as Error).message}</p>}
 
-        {!isLoading && !isError && data.length === 0 && (
+        {!isLoading && !isError && filteredProperties.length === 0 && (
           <p className="rounded-xl border border-border bg-card p-6 text-muted-foreground">
-            No properties found for your search.
+            No properties found for this category/search.
           </p>
         )}
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {data.map((property) => (
+          {filteredProperties.map((property) => (
             <PropertyCard key={property._id} property={property} />
           ))}
         </div>
