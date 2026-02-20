@@ -8,6 +8,7 @@ import authRoutes from "./routes/authRoutes.js";
 import propertyRoutes from "./routes/propertyRoutes.js";
 import bookingRoutes from "./routes/bookingRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
+import webhookRoutes from "./routes/webhookRoutes.js";
 import fs from "fs";
 import path from "path";
 
@@ -16,11 +17,14 @@ if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
 }
 
-
 dotenv.config();
 connectDB();
 
 const app = express();
+
+// Webhook routes should use raw body (before JSON parsing)
+app.use("/api/webhooks", express.raw({ type: "application/json" }), webhookRoutes);
+
 app.use(
   cors({
     origin: ["http://localhost:8080", "http://localhost:5173"],
@@ -30,7 +34,6 @@ app.use(
 //app.use(cors());
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
-
 
 // Routes
 app.use("/api/auth", authRoutes);

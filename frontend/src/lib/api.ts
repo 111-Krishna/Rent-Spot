@@ -28,6 +28,18 @@ const request = async <T>(path: string, options?: RequestInit): Promise<T> => {
   return data as T;
 };
 
+export const authApi = {
+  getCurrentUser: (token: string) =>
+    request<{ user: any }>("/api/auth/me", {
+      headers: getAuthHeaders(token),
+    }),
+  syncClerkUser: (token: string) =>
+    request<{ message: string; user: any }>("/api/auth/sync", {
+      method: "POST",
+      headers: getAuthHeaders(token),
+    }),
+};
+
 export const propertyApi = {
   getProperties: (search = "") =>
     request<Property[]>(`/api/properties${search ? `?search=${encodeURIComponent(search)}` : ""}`),

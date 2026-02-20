@@ -25,6 +25,22 @@ const userSchema = new mongoose.Schema(
       required: false,
       minlength: 6,
     },
+    profileImageUrl: {
+      type: String,
+      default: null,
+    },
+    emailVerified: {
+      type: Boolean,
+      default: false,
+    },
+    firstName: {
+      type: String,
+      default: null,
+    },
+    lastName: {
+      type: String,
+      default: null,
+    },
     role: {
       type: String,
       enum: ["user", "admin"],

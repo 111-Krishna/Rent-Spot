@@ -25,6 +25,9 @@ const verifyClerkToken = async (token) => {
   const kid = decoded?.header?.kid;
   const issuer = decoded?.payload?.iss;
 
+  console.log("Token decoded - issuer:", issuer, "kid:", kid);
+  console.log("Full claims:", decoded?.payload);
+
   if (!kid || !issuer) {
     throw new Error("Invalid Clerk token payload/header");
   }
@@ -51,23 +54,76 @@ const verifyClerkToken = async (token) => {
 };
 
 const findOrCreateClerkUser = async (claims) => {
-  const clerkId = claims.sub;
-  if (!clerkId) return null;
+  try {
+    const clerkId = claims.sub;
+    if (!clerkId) {
+      console.error("No clerkId in claims");
+      return null;
+    }
 
-  const existingUser = await User.findOne({ clerkId }).select("-password");
-  if (existingUser) return existingUser;
+    // First, try to find by clerkId (most reliable)
+    const existingUser = await User.findOne({ clerkId }).select("-password");
+    if (existingUser) {
+      console.log(`User found by clerkId: ${existingUser._id}`);
+      return existingUser;
+    }
 
-  const email = claims.email || `${clerkId}@clerk.local`;
-  const name = claims.name || claims.given_name || claims.username || "Clerk User";
+    // Extract email from various possible locations in Clerk claims
+    let email = claims.email;
+    if (!email && claims.email_verified) {
+      // Sometimes email is in email_verified field as an object
+      email = claims.email_verified?.email;
+    }
+    
+    // If still no email, generate a unique one based on clerkId
+    if (!email) {
+      // Use clerkId directly instead of generating, to ensure consistency
+      email = `${clerkId}@clerk.local`;
+    }
 
-  const createdUser = await User.create({
-    clerkId,
-    name,
-    email,
-    password: `clerk_${Math.random().toString(36).slice(2, 12)}`,
-  });
+    // Extract name from various possible locations
+    let name = claims.name;
+    if (!name) {
+      name = claims.given_name || claims.family_name || claims.username || "Clerk User";
+      if (claims.given_name && claims.family_name) {
+        name = `${claims.given_name} ${claims.family_name}`.trim();
+      }
+    }
 
-  return User.findById(createdUser._id).select("-password");
+    console.log(`Creating new user - clerkId: ${clerkId}, email: ${email}, name: ${name}`);
+
+    try {
+      const createdUser = await User.create({
+        clerkId,
+        name,
+        email,
+        password: `clerk_${Math.random().toString(36).slice(2, 12)}`,
+      });
+
+      console.log(`User created successfully: ${createdUser._id}`);
+      return User.findById(createdUser._id).select("-password");
+    } catch (createError) {
+      // Handle duplicate email error by trying to find existing user
+      if (createError.code === 11000 && createError.keyPattern?.email) {
+        console.log(`Email already exists (${email}), attempting to find user...`);
+        const emailUser = await User.findOne({ email }).select("-password");
+        if (emailUser) {
+          // Update clerkId if not already set
+          if (!emailUser.clerkId) {
+            emailUser.clerkId = clerkId;
+            await emailUser.save();
+            console.log(`Updated existing user with clerkId: ${emailUser._id}`);
+          }
+          return emailUser;
+        }
+      }
+      throw createError;
+    }
+  } catch (error) {
+    console.error("Error in findOrCreateClerkUser:", error.message);
+    console.error("Full error:", error);
+    throw error;
+  }
 };
 
 export const protect = async (req, res, next) => {
@@ -89,7 +145,8 @@ export const protect = async (req, res, next) => {
     }
 
     return next();
-  } catch (_error) {
-    return res.status(401).json({ message: "Not authorized, Clerk token failed" });
+  } catch (error) {
+    console.error("Auth middleware error:", error.message);
+    return res.status(401).json({ message: "Not authorized, Clerk token failed", error: error.message });
   }
 };
