@@ -12,6 +12,7 @@ import ListProperty from "./pages/ListProperty";
 import PaymentPage from "./pages/PaymentPage";
 import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
+import SupportAssistantPage from "./pages/SupportAssistantPage";
 
 const queryClient = new QueryClient();
 
@@ -32,6 +33,7 @@ const AppContent = () => {
             <Route path="/home/:id" element={<PropertyDetails />} />
             <Route path="/home/:id/payment" element={<PaymentPage />} />
             <Route path="/owner/list-property" element={<ListProperty />} />
+            <Route path="/support" element={<SupportAssistantPage />} />
             <Route path="/sign-in/*" element={<SignInPage />} />
             <Route path="/sign-up/*" element={<SignUpPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
