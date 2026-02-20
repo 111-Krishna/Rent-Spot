@@ -28,6 +28,8 @@ const Navbar = () => {
         <div>
           {userId ?  (<div  className="hidden md:flex items-center gap-10">
 
+          <a href="/support" className="text-label text-muted-foreground hover:text-foreground transition-colors duration-300">SUPPORT</a>
+
           {navLinks.map((link) => (
             
 
@@ -47,6 +49,8 @@ const Navbar = () => {
           
            : (
             <div  className="hidden md:flex items-center gap-10">
+
+          <a href="/support" className="text-label text-muted-foreground hover:text-foreground transition-colors duration-300">SUPPORT</a>
             <SignInButton/>
             <SignUpButton/>
             </div>

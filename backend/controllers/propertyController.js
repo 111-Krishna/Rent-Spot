@@ -4,7 +4,7 @@ import Property from "../models/Property.js";
 // Create a new property (Admin only)
 export const createProperty = async (req, res) => {
   try {
-    const { title, description, price, location } = req.body;
+    const { title, description, price, location, houseRules, checkInInstructions, wifiCode, parkingInstructions } = req.body;
     const parsedPrice = Number(price);
 
     if (!title?.trim() || Number.isNaN(parsedPrice)) {
@@ -19,6 +19,10 @@ export const createProperty = async (req, res) => {
       price: parsedPrice,
       location,
       images,
+      houseRules,
+      checkInInstructions,
+      wifiCode,
+      parkingInstructions,
       createdBy: req.user._id,
     });
 

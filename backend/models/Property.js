@@ -8,6 +8,10 @@ const propertySchema = new mongoose.Schema(
     price: { type: Number, required: true },
     location: { type: String },
     images: [{ type: String }],
+    houseRules: { type: String, default: "" },
+    checkInInstructions: { type: String, default: "" },
+    wifiCode: { type: String, default: "" },
+    parkingInstructions: { type: String, default: "" },
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   },
   { timestamps: true }
