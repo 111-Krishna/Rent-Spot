@@ -133,6 +133,12 @@ const Home = () => {
 
           <div className="order-2 flex items-center gap-3 md:order-3">
             <Link
+              to="/support"
+              className="hidden text-sm text-muted-foreground md:block"
+            >
+              AI Support
+            </Link>
+            <Link
               to="/owner/list-property"
               className="hidden text-sm text-muted-foreground md:block"
             >

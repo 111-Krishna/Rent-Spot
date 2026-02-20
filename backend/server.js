@@ -9,6 +9,7 @@ import propertyRoutes from "./routes/propertyRoutes.js";
 import bookingRoutes from "./routes/bookingRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
 import webhookRoutes from "./routes/webhookRoutes.js";
+import supportRoutes from "./routes/supportRoutes.js";
 import fs from "fs";
 import path from "path";
 
@@ -40,6 +41,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/properties", propertyRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/payments", paymentRoutes);
+app.use("/api", supportRoutes);
 
 app.get("/", (req, res) => {
   res.send("API is running...");

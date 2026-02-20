@@ -81,3 +81,44 @@ export const paymentApi = {
       body: JSON.stringify(payload),
     }),
 };
+
+
+export type SupportContext = {
+  userRole?: string;
+  city?: string;
+  checkIn?: string;
+  checkOut?: string;
+  guests?: string;
+  budget?: string;
+  listingName?: string;
+  listingPrice?: string;
+  amenities?: string;
+  houseRules?: string;
+  cancellation?: string;
+  conversationGoal?: string;
+  bookingId?: string;
+  listingId?: string;
+};
+
+export type SupportMessage = {
+  role: "user" | "assistant";
+  text: string;
+};
+
+export type SupportChatPayload = SupportContext & {
+  message: string;
+};
+
+export type SupportChatResponse = {
+  reply: string;
+  systemPrompt?: string;
+  toolCalls?: Array<{ tool: string; result: unknown }>;
+};
+
+export const supportApi = {
+  chat: (payload: SupportChatPayload) =>
+    request<SupportChatResponse>("/api/support/chat", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+};
