@@ -9,9 +9,11 @@ const getAuthHeaders = (token?: string) => {
 };
 
 const request = async <T>(path: string, options?: RequestInit): Promise<T> => {
+  const isFormData = options?.body instanceof FormData;
+
   const response = await fetch(`${API_BASE_URL}${path}`, {
     headers: {
-      "Content-Type": "application/json",
+      ...(isFormData ? {} : { "Content-Type": "application/json" }),
       ...(options?.headers || {}),
     },
     ...options,
@@ -30,12 +32,20 @@ export const propertyApi = {
   getProperties: (search = "") =>
     request<Property[]>(`/api/properties${search ? `?search=${encodeURIComponent(search)}` : ""}`),
   getPropertyById: (propertyId: string) => request<Property>(`/api/properties/${propertyId}`),
-  createProperty: (payload: PropertyPayload, token: string) =>
-    request<Property>("/api/properties", {
+  createProperty: (payload: PropertyPayload, token: string) => {
+    const formData = new FormData();
+    formData.append("title", payload.title);
+    formData.append("description", payload.description);
+    formData.append("price", String(payload.price));
+    formData.append("location", payload.location);
+    payload.images?.forEach((image) => formData.append("images", image));
+
+    return request<Property>("/api/properties", {
       method: "POST",
       headers: getAuthHeaders(token),
-      body: JSON.stringify(payload),
-    }),
+      body: formData,
+    });
+  },
 };
 
 export const bookingApi = {

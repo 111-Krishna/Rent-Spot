@@ -1,11 +1,13 @@
 import { FormEvent, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
+import { Link, useParams } from "react-router-dom";
+import { SignInButton, UserButton, useAuth } from "@clerk/clerk-react";
 import { bookingApi, paymentApi, propertyApi } from "@/lib/api";
 
 const PaymentPage = () => {
   const { id = "" } = useParams();
-  const [token, setToken] = useState(localStorage.getItem("authToken") || "");
+  const { isSignedIn, getToken } = useAuth();
   const [name, setName] = useState("John Doe");
   const [cardNumber, setCardNumber] = useState("");
   const [expiry, setExpiry] = useState("");
@@ -23,6 +25,8 @@ const PaymentPage = () => {
   const payMutation = useMutation({
     mutationFn: async () => {
       if (!property) throw new Error("Property not found");
+      const token = await getToken();
+      if (!token) throw new Error("Please sign in with Clerk to complete payment.");
 
       const booking = await bookingApi.createBooking({ propertyId: property._id, startDate, endDate }, token);
       const order = await paymentApi.createOrder({ amount: property.price, bookingId: booking._id });
@@ -31,12 +35,14 @@ const PaymentPage = () => {
         return order.message;
       }
 
-      const verifyResult = await paymentApi.verifyPayment({
-        razorpay_order_id: order.id,
-        razorpay_payment_id: `fake_pay_${Date.now()}`,
-        razorpay_signature: "demo_signature",
-        bookingId: booking._id,
-      }).catch(() => ({ message: "Order created. Complete verification with real Razorpay signature." }));
+      const verifyResult = await paymentApi
+        .verifyPayment({
+          razorpay_order_id: order.id,
+          razorpay_payment_id: `fake_pay_${Date.now()}`,
+          razorpay_signature: "demo_signature",
+          bookingId: booking._id,
+        })
+        .catch(() => ({ message: "Order created. Complete verification with real Razorpay signature." }));
 
       return verifyResult.message;
     },
@@ -46,27 +52,44 @@ const PaymentPage = () => {
 
   const handlePay = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    localStorage.setItem("authToken", token);
     payMutation.mutate();
   };
 
   return (
-    <main className="min-h-screen bg-background px-4 py-10 text-foreground">
-      <div className="mx-auto max-w-xl rounded-3xl border border-border bg-card p-6 shadow-2xl">
+    <main className="min-h-screen bg-background px-4 py-8 text-foreground md:px-8">
+      <div className="mx-auto mb-6 flex w-full max-w-3xl items-center justify-between">
+        <Link
+          to={id ? `/home/${id}` : "/home"}
+          className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm hover:border-foreground"
+        >
+          <ArrowLeft size={16} /> Back
+        </Link>
+        {isSignedIn && <UserButton />}
+      </div>
+
+      <div className="mx-auto max-w-3xl rounded-3xl border border-border bg-card p-6 shadow-2xl md:p-8">
         <img
-          src={property?.images?.[0] ? `${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}/${property.images[0]}` : "https://images.unsplash.com/photo-1494526585095-c41746248156?w=1200&q=80"}
+          src={
+            property?.images?.[0]
+              ? `${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}/${property.images[0]}`
+              : "https://images.unsplash.com/photo-1494526585095-c41746248156?w=1200&q=80"
+          }
           alt={property?.title || "Property"}
-          className="h-72 w-full rounded-2xl object-cover"
+          className="h-64 w-full rounded-2xl object-cover md:h-80"
         />
 
+        {!isSignedIn && (
+          <div className="mt-6 rounded-xl border border-border bg-background p-4">
+            <p className="mb-3 text-sm text-muted-foreground">Please sign in with Clerk to continue payment.</p>
+            <SignInButton mode="modal">
+              <button type="button" className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground">
+                Sign In to Pay
+              </button>
+            </SignInButton>
+          </div>
+        )}
+
         <form className="mt-6 space-y-4" onSubmit={handlePay}>
-          <input
-            value={token}
-            onChange={(event) => setToken(event.target.value)}
-            placeholder="JWT token"
-            className="h-12 w-full rounded-xl border border-input bg-background px-4"
-            required
-          />
           <input
             value={name}
             onChange={(event) => setName(event.target.value)}
@@ -118,8 +141,8 @@ const PaymentPage = () => {
 
           <button
             type="submit"
-            className="h-14 w-full rounded-2xl bg-rose-500 text-4xl font-semibold text-white transition hover:bg-rose-400"
-            disabled={payMutation.isPending || !property}
+            className="h-12 w-full rounded-2xl bg-primary text-xl font-semibold text-primary-foreground transition hover:opacity-90 md:text-2xl"
+            disabled={payMutation.isPending || !property || !isSignedIn}
           >
             {payMutation.isPending ? "Processing..." : `Pay ₹${property?.price.toLocaleString() || 0}`}
           </button>

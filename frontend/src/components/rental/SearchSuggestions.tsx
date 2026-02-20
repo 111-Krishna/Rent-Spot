@@ -7,7 +7,7 @@ export type SuggestionItem = {
 
 type SearchSuggestionsProps = {
   suggestions: SuggestionItem[];
-  onPick: (value: string) => void;
+  onPick: (item: SuggestionItem) => void;
 };
 
 const SearchSuggestions = ({ suggestions, onPick }: SearchSuggestionsProps) => {
@@ -20,7 +20,7 @@ const SearchSuggestions = ({ suggestions, onPick }: SearchSuggestionsProps) => {
           key={suggestion.id}
           type="button"
           className="w-full rounded-xl px-4 py-3 text-left transition hover:bg-accent"
-          onClick={() => onPick(`${suggestion.title} ${suggestion.location}`)}
+          onClick={() => onPick(suggestion)}
         >
           <p className="text-lg font-semibold text-foreground">{suggestion.title}</p>
           <p className="text-sm text-muted-foreground">

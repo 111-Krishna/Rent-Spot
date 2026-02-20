@@ -1,5 +1,5 @@
 import heroBg from "@/assets/hero-bg.jpg";
-import { useAuth } from "@clerk/clerk-react";
+import { SignInButton, useAuth } from "@clerk/clerk-react";
 
 const Hero = () => {
   const {isSignedIn} = useAuth()
@@ -23,13 +23,25 @@ const Hero = () => {
           algorithms for next-generation rental platforms
         </p>
         <div className="mt-10 animate-fade-in-up" style={{ animationDelay: "0.4s" }}>
-          <a
-            href={`${isSignedIn ? "/home" : "/sign-in"}`}
-            className="text-label text-white/70 hover:text-white transition-colors flex flex-col items-center gap-2"
-          >
-            <span>Get Started</span>
-            <span className="w-px h-8 bg-white/40" />
-          </a>
+          {isSignedIn ? (
+            <a
+              href="/home"
+              className="text-label text-white/70 hover:text-white transition-colors flex flex-col items-center gap-2"
+            >
+              <span>Get Started</span>
+              <span className="w-px h-8 bg-white/40" />
+            </a>
+          ) : (
+            <SignInButton mode="modal">
+              <button
+                type="button"
+                className="text-label text-white/70 hover:text-white transition-colors flex flex-col items-center gap-2"
+              >
+                <span>Get Started</span>
+                <span className="w-px h-8 bg-white/40" />
+              </button>
+            </SignInButton>
+          )}
         </div>
       </div>
     </section>

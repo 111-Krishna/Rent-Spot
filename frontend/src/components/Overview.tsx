@@ -4,7 +4,7 @@ const stats = [
   { value: "MERN", label: "Tech Stack" },
   { value: "Real-Time", label: "Dynamic Pricing" },
   { value: "Razorpay", label: "Payment Integration" },
-  { value: "JWT", label: "Authentication" },
+  { value: "Clerk", label: "Authentication" },
 ];
 
 const highlights = [
