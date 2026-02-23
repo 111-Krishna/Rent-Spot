@@ -1,5 +1,7 @@
-import express from "express";
 import dotenv from "dotenv";
+dotenv.config();
+
+import express from "express";
 import cors from "cors";
 import connectDB from "./config/db.js";
 
@@ -10,6 +12,7 @@ import bookingRoutes from "./routes/bookingRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
 import webhookRoutes from "./routes/webhookRoutes.js";
 import supportRoutes from "./routes/supportRoutes.js";
+import { handleStripeWebhook } from "./controllers/paymentController.js";
 import fs from "fs";
 import path from "path";
 
@@ -17,14 +20,13 @@ const uploadDir = path.join(process.cwd(), "uploads");
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
 }
-
-dotenv.config();
 connectDB();
 
 const app = express();
 
 // Webhook routes should use raw body (before JSON parsing)
 app.use("/api/webhooks", express.raw({ type: "application/json" }), webhookRoutes);
+app.post("/api/payments/webhook", express.raw({ type: "application/json" }), handleStripeWebhook);
 
 app.use(
   cors({

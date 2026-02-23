@@ -15,11 +15,13 @@ export const createBooking = async (req, res) => {
       property: propertyId,
       startDate,
       endDate,
+      priceTotal: property.price,
       status: "pending",
     });
 
     res.status(201).json(booking);
   } catch (error) {
+    console.error("Booking creation error:", error);
     res.status(500).json({ message: error.message });
   }
 };
