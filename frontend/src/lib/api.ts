@@ -1,4 +1,4 @@
-import type { BookingPayload, BookingResponse, PaymentOrderPayload, PaymentOrderResponse, PaymentVerifyPayload } from "@/types/booking";
+import type { BookingPayload, BookingResponse, PopulatedBooking, CheckoutSessionPayload, CheckoutSessionResponse } from "@/types/booking";
 import type { Property, PropertyPayload } from "@/types/property";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
@@ -10,13 +10,14 @@ const getAuthHeaders = (token?: string) => {
 
 const request = async <T>(path: string, options?: RequestInit): Promise<T> => {
   const isFormData = options?.body instanceof FormData;
+  const { headers: optionHeaders, ...restOptions } = options || {};
 
   const response = await fetch(`${API_BASE_URL}${path}`, {
+    ...restOptions,
     headers: {
       ...(isFormData ? {} : { "Content-Type": "application/json" }),
-      ...(options?.headers || {}),
+      ...(optionHeaders || {}),
     },
-    ...options,
   });
 
   const data = await response.json().catch(() => ({}));
@@ -67,19 +68,21 @@ export const bookingApi = {
       headers: getAuthHeaders(token),
       body: JSON.stringify(payload),
     }),
+  getUserBookings: (token: string) =>
+    request<PopulatedBooking[]>("/api/bookings/my-bookings", {
+      headers: getAuthHeaders(token),
+    }),
 };
 
 export const paymentApi = {
-  createOrder: (payload: PaymentOrderPayload) =>
-    request<PaymentOrderResponse | { message: string }>("/api/payments/order", {
+  createCheckoutSession: (payload: CheckoutSessionPayload, token: string) =>
+    request<CheckoutSessionResponse | { message: string }>("/api/payments/create-checkout-session", {
       method: "POST",
+      headers: getAuthHeaders(token),
       body: JSON.stringify(payload),
     }),
-  verifyPayment: (payload: PaymentVerifyPayload) =>
-    request<{ message: string }>("/api/payments/verify", {
-      method: "POST",
-      body: JSON.stringify(payload),
-    }),
+  getSessionStatus: (sessionId: string) =>
+    request<{ status: string; bookingId: string }>(`/api/payments/session-status?session_id=${sessionId}`),
 };
 
 

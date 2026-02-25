@@ -11,22 +11,29 @@ export type BookingResponse = {
   user: string;
   startDate: string;
   endDate: string;
+  priceTotal?: number;
+  stripeSessionId?: string;
+  paidAt?: string;
 };
 
-export type PaymentOrderPayload = {
-  amount: number;
+export type PopulatedBooking = Omit<BookingResponse, "property"> & {
+  property: {
+    _id: string;
+    title: string;
+    price: number;
+    location?: string;
+    images?: string[];
+  } | null;
+  createdAt?: string;
+};
+
+export type CheckoutSessionPayload = {
   bookingId: string;
-};
-
-export type PaymentOrderResponse = {
-  id: string;
+  propertyId: string;
   amount: number;
-  currency: string;
+  propertyTitle: string;
 };
 
-export type PaymentVerifyPayload = {
-  razorpay_order_id: string;
-  razorpay_payment_id: string;
-  razorpay_signature: string;
-  bookingId: string;
+export type CheckoutSessionResponse = {
+  url: string;
 };

@@ -2,15 +2,15 @@ import { Mail } from "lucide-react";
 
 const team = [
   { name: "T. Manikumar", role: "Associate Professor & Advisor", email: "t.manikumar@klu.ac.in" },
-  { name: "Kotapati Karthik", role: "Researcher", email: "karthikkotapati6@gmail.com" },
+  { name: "K. Krishna Reddy", role: "Developer", email: "krishnareddykommireddy14@gmail.com" },
   { name: "Masina Jeevan", role: "Researcher", email: "masinajeevan@gmail.com" },
-  { name: "K. Krishna Reddy", role: "Researcher", email: "krishnareddykommireddy14@gmail.com" },
+  { name: "Kotapati Karthik", role: "Researcher", email: "karthikkotapati6@gmail.com" },
   { name: "R. Neelima", role: "Researcher", email: "rangisettyneelima@gmail.com" },
 ];
 
 const Team = () => {
   return (
-    <section id="team" className="py-24 md:py-32 px-6 section-alt">
+    <section id="team" className="relative py-24 md:py-32 px-6 bg-black bg-grid bg-glow">
       <div className="container mx-auto">
         <p className="text-label text-muted-foreground mb-4">RESEARCH TEAM</p>
         <h2 className="text-section-title text-3xl sm:text-4xl md:text-5xl text-foreground max-w-2xl">

@@ -10,9 +10,11 @@ import Home from "./pages/home";
 import PropertyDetails from "./pages/PropertyDetails";
 import ListProperty from "./pages/ListProperty";
 import PaymentPage from "./pages/PaymentPage";
+import PaymentSuccessPage from "./pages/PaymentSuccessPage";
 import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
 import SupportAssistantPage from "./pages/SupportAssistantPage";
+import MyBookingsPage from "./pages/MyBookingsPage";
 
 const queryClient = new QueryClient();
 
@@ -32,7 +34,10 @@ const AppContent = () => {
             <Route path="/home" element={<Home />} />
             <Route path="/home/:id" element={<PropertyDetails />} />
             <Route path="/home/:id/payment" element={<PaymentPage />} />
+            <Route path="/payment/success" element={<PaymentSuccessPage />} />
+            <Route path="/payment/cancel" element={<PaymentPage />} />
             <Route path="/owner/list-property" element={<ListProperty />} />
+            <Route path="/my-bookings" element={<MyBookingsPage />} />
             <Route path="/support" element={<SupportAssistantPage />} />
             <Route path="/sign-in/*" element={<SignInPage />} />
             <Route path="/sign-up/*" element={<SignUpPage />} />

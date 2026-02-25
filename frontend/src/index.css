@@ -63,7 +63,12 @@
     font-family: var(--font-body);
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: var(--font-display);
   }
 }
@@ -93,15 +98,86 @@
   }
 
   .hero-overlay {
-    background: linear-gradient(
-      180deg,
-      hsl(var(--hero-overlay)) 0%,
-      hsl(0 0% 0% / 0.3) 50%,
-      hsl(0 0% 0% / 0.6) 100%
-    );
+    background: linear-gradient(180deg,
+        hsl(var(--hero-overlay)) 0%,
+        hsl(0 0% 0% / 0.3) 50%,
+        hsl(0 0% 0% / 0.6) 100%);
   }
 
   .section-alt {
     background-color: hsl(var(--section-alt));
   }
+
+  /* ── Project-wide grid & glow ── */
+  .bg-grid {
+    position: relative;
+  }
+
+  .bg-grid::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+    background-size: 64px 64px;
+  }
+
+  .bg-grid>* {
+    position: relative;
+    z-index: 1;
+  }
+
+  .bg-glow::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(255, 255, 255, 0.06), transparent),
+      radial-gradient(circle 400px at 20% 60%, rgba(255, 255, 255, 0.015), transparent),
+      radial-gradient(circle 400px at 80% 40%, rgba(255, 255, 255, 0.015), transparent);
+  }
+}
+
+/* ── Hero tilt animation ── */
+.tilt-card {
+  transform-style: preserve-3d;
+  perspective: 1000px;
+  transition: transform 0.15s ease-out;
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.7s ease-out both;
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
 }

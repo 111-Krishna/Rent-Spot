@@ -21,13 +21,13 @@ const PropertyDetails = () => {
   const images = property.images?.length
     ? property.images.map((image) => `${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}/${image}`)
     : [
-        "https://images.unsplash.com/photo-1494526585095-c41746248156?w=1200&q=80",
-        "https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=1200&q=80",
-        "https://images.unsplash.com/photo-1460317442991-0ec209397118?w=1200&q=80",
-      ];
+      "https://images.unsplash.com/photo-1494526585095-c41746248156?w=1200&q=80",
+      "https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=1200&q=80",
+      "https://images.unsplash.com/photo-1460317442991-0ec209397118?w=1200&q=80",
+    ];
 
   return (
-    <main className="min-h-screen bg-background px-4 py-8 text-foreground md:px-10">
+    <main className="min-h-screen bg-black bg-grid bg-glow px-4 py-8 text-foreground md:px-10">
       <div className="mx-auto max-w-6xl space-y-8">
         <Link
           to="/home"
@@ -55,9 +55,8 @@ const PropertyDetails = () => {
             <button
               type="button"
               key={`${image}-${index}`}
-              className={`overflow-hidden rounded-xl border-2 transition ${
-                index === selectedImage ? "border-rose-500" : "border-transparent"
-              }`}
+              className={`overflow-hidden rounded-xl border-2 transition ${index === selectedImage ? "border-rose-500" : "border-transparent"
+                }`}
               onClick={() => setSelectedImage(index)}
             >
               <img src={image} alt={`Preview ${index + 1}`} className="h-24 w-36 object-cover" />

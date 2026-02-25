@@ -3,7 +3,7 @@ import { Database, CreditCard, Users, BarChart3, Lock, Globe } from "lucide-reac
 const features = [
   { icon: Database, title: "Property Management", desc: "Full CRUD operations for property listings with real-time availability tracking" },
   { icon: BarChart3, title: "Demand-Based Pricing", desc: "Algorithms adjust pricing based on seasons, booking density, and user demand" },
-  { icon: CreditCard, title: "Razorpay Payments", desc: "Secure payment processing with encrypted transaction handling" },
+  { icon: CreditCard, title: "Stripe Payment Gateway", desc: "Secure payment processing with encrypted transaction handling" },
   { icon: Users, title: "Multi-Role System", desc: "Distinct interfaces for guests, property owners, and administrators" },
   { icon: Lock, title: "Clerk Authentication", desc: "Secure user sessions with Clerk-managed authentication and tokens" },
   { icon: Globe, title: "RESTful APIs", desc: "Clean API architecture connecting React frontend with Express.js backend" },

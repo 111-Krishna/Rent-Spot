@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Menu, Search } from "lucide-react";
+import { Bot, CalendarDays, Menu, Search } from "lucide-react";
 import { SignInButton, UserButton, useAuth } from "@clerk/clerk-react";
 import { useQuery } from "@tanstack/react-query";
 import PropertyCard from "@/components/rental/PropertyCard";
@@ -92,11 +92,11 @@ const Home = () => {
   };
 
   return (
-    <main className="min-h-screen bg-background text-foreground">
+    <main className="min-h-screen bg-black bg-grid bg-glow text-foreground">
       <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-3 md:px-8">
+        <div className="mx-auto flex flex-wrap items-center justify-between gap-3 px-4 py-3 md:px-8">
           <Link
-            to="/home"
+            to="/"
             className="text-section-title text-2xl tracking-tight text-foreground md:text-3xl"
           >
             Private Property Rental
@@ -134,22 +134,25 @@ const Home = () => {
           <div className="order-2 flex items-center gap-3 md:order-3">
             <Link
               to="/support"
+              className="hidden text-sm text-muted-foreground  md:block"
+            >
+              <div className="flex items-center ">
+                <Bot className="size-6 mr-2" />
+              </div>
+            </Link>
+            <Link
+              to="/my-bookings"
               className="hidden text-sm text-muted-foreground md:block"
             >
-              AI Support
+              <CalendarDays size={18} />
             </Link>
             <Link
               to="/owner/list-property"
               className="hidden text-sm text-muted-foreground md:block"
             >
-              List Your Home
-            </Link>
-            <button
-              className="rounded-full border border-border p-2"
-              aria-label="menu"
-            >
               <Menu size={18} />
-            </button>
+            </Link>
+
             {isSignedIn ? (
               <UserButton />
             ) : (
@@ -169,11 +172,10 @@ const Home = () => {
                 key={category.value}
                 type="button"
                 onClick={() => setActiveCategory(category.value)}
-                className={`border-b-2 pb-1 transition ${
-                  activeCategory === category.value
-                    ? "border-foreground text-foreground"
-                    : "border-transparent hover:text-foreground"
-                }`}
+                className={`border-b-2 pb-1 transition ${activeCategory === category.value
+                  ? "border-foreground text-foreground"
+                  : "border-transparent hover:text-foreground"
+                  }`}
               >
                 <span className="text-xs md:text-sm">{category.label}</span>
               </button>
