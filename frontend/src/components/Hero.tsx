@@ -20,7 +20,7 @@ const Hero = () => {
   }, []);
 
   return (
-    <section className="relative h-screen w-full overflow-hidden bg-black">
+    <section className="relative h-screen w-full overflow-hidden bg-background">
       {/* Grid background */}
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.035]"
@@ -49,7 +49,7 @@ const Hero = () => {
 
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center justify-center h-full text-white px-6">
-        <h1 className="text-hero text-5xl sm:text-7xl md:text-8xl lg:text-9xl text-center animate-fade-in-up">
+        <h1 className="text-hero gradient-title text-5xl sm:text-7xl md:text-8xl lg:text-9xl text-center animate-fade-in-up">
           NEXT-GEN
           <br />
           RENTALS

@@ -74,7 +74,7 @@ const PaymentPage = () => {
       : 0;
 
   return (
-    <main className="min-h-screen bg-black bg-grid bg-glow px-4 py-8 text-foreground md:px-8">
+    <main className="min-h-screen bg-background bg-grid bg-glow px-4 py-8 text-foreground md:px-8">
       {/* Top bar */}
       <div className="mx-auto mb-6 flex w-full max-w-3xl items-center justify-between">
         <Link

@@ -153,7 +153,7 @@ const SupportAssistantPage = () => {
                 <Bot size={36} className="text-foreground/80" />
               </div>
 
-              <h2 className="text-section-title text-2xl md:text-3xl">How can I help?</h2>
+              <h2 className="text-section-title gradient-title text-2xl md:text-3xl">How can I help?</h2>
               <p className="mt-2 text-sm text-muted-foreground">
                 I'm StayMate — your rental concierge. Ask anything about bookings, check-in, policies, or listings.
               </p>
@@ -186,8 +186,8 @@ const SupportAssistantPage = () => {
                     {/* avatar */}
                     <div
                       className={`mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full ${isUser
-                          ? "bg-foreground text-background"
-                          : "border border-border/60 bg-card text-foreground/70"
+                        ? "bg-foreground text-background"
+                        : "border border-border/60 bg-card text-foreground/70"
                         }`}
                     >
                       {isUser ? <User size={14} /> : <Bot size={14} />}
@@ -196,8 +196,8 @@ const SupportAssistantPage = () => {
                     {/* bubble */}
                     <div
                       className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${isUser
-                          ? "rounded-tr-md bg-foreground text-background"
-                          : "rounded-tl-md border border-border/40 bg-card/80 text-foreground/90 backdrop-blur"
+                        ? "rounded-tr-md bg-foreground text-background"
+                        : "rounded-tl-md border border-border/40 bg-card/80 text-foreground/90 backdrop-blur"
                         }`}
                     >
                       {msg.text}

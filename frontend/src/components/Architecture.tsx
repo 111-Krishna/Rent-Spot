@@ -26,7 +26,7 @@ const Architecture = () => {
     <section id="architecture" className="py-24 md:py-32 px-6">
       <div className="container mx-auto">
         <p className="text-label text-muted-foreground mb-4">SYSTEM ARCHITECTURE</p>
-        <h2 className="text-section-title text-3xl sm:text-4xl md:text-5xl text-foreground max-w-3xl">
+        <h2 className="text-section-title gradient-title text-3xl sm:text-4xl md:text-5xl max-w-3xl">
           Full-stack MERN architecture with integrated payment flow
         </h2>
 

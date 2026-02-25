@@ -51,6 +51,39 @@
     --font-display: 'Playfair Display', serif;
     --font-body: 'Inter', sans-serif;
   }
+
+  .light {
+    --background: 0 0% 98%;
+    --foreground: 0 0% 9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 9%;
+
+    --primary: 0 0% 12%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 0 0% 94%;
+    --secondary-foreground: 0 0% 12%;
+
+    --muted: 0 0% 94%;
+    --muted-foreground: 0 0% 42%;
+
+    --accent: 0 0% 94%;
+    --accent-foreground: 0 0% 12%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 88%;
+    --input: 0 0% 88%;
+    --ring: 0 0% 12%;
+
+    --hero-overlay: 0 0% 100% / 0.45;
+    --section-alt: 0 0% 96%;
+  }
 }
 
 @layer base {
@@ -108,6 +141,22 @@
     background-color: hsl(var(--section-alt));
   }
 
+  .gradient {
+    @apply bg-gradient-to-b from-gray-400 via-gray-200 to-gray-600;
+  }
+
+  .light .gradient {
+    @apply bg-gradient-to-b from-gray-900 via-gray-700 to-gray-900;
+  }
+
+  .gradient-title {
+    @apply bg-gradient-to-b from-gray-400 via-gray-200 to-gray-600 font-extrabold tracking-tighter text-transparent bg-clip-text pb-2 pr-2;
+  }
+
+  .light .gradient-title {
+    @apply bg-gradient-to-b from-gray-900 via-gray-700 to-gray-900;
+  }
+
   /* ── Project-wide grid & glow ── */
   .bg-grid {
     position: relative;
@@ -120,8 +169,8 @@
     pointer-events: none;
     z-index: 0;
     background-image:
-      linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+      linear-gradient(hsl(var(--foreground) / 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--foreground) / 0.06) 1px, transparent 1px);
     background-size: 64px 64px;
   }
 
@@ -137,9 +186,9 @@
     pointer-events: none;
     z-index: 0;
     background:
-      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(255, 255, 255, 0.06), transparent),
-      radial-gradient(circle 400px at 20% 60%, rgba(255, 255, 255, 0.015), transparent),
-      radial-gradient(circle 400px at 80% 40%, rgba(255, 255, 255, 0.015), transparent);
+      radial-gradient(ellipse 80% 50% at 50% -10%, hsl(var(--foreground) / 0.06), transparent),
+      radial-gradient(circle 400px at 20% 60%, hsl(var(--foreground) / 0.015), transparent),
+      radial-gradient(circle 400px at 80% 40%, hsl(var(--foreground) / 0.015), transparent);
   }
 }
 

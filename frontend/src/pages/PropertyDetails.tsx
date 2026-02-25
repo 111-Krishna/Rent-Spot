@@ -27,7 +27,7 @@ const PropertyDetails = () => {
     ];
 
   return (
-    <main className="min-h-screen bg-black bg-grid bg-glow px-4 py-8 text-foreground md:px-10">
+    <main className="min-h-screen bg-background bg-grid bg-glow px-4 py-8 text-foreground md:px-10">
       <div className="mx-auto max-w-6xl space-y-8">
         <Link
           to="/home"
@@ -37,7 +37,7 @@ const PropertyDetails = () => {
         </Link>
 
         <section>
-          <h1 className="text-section-title text-4xl md:text-5xl">{property.title}</h1>
+          <h1 className="text-section-title gradient-title text-4xl md:text-5xl">{property.title}</h1>
           <div className="mt-3 flex flex-wrap items-center gap-6 text-xl text-muted-foreground">
             <p className="inline-flex items-center gap-2">
               <MapPin size={20} /> {property.location || "Unknown location"}

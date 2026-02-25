@@ -16,6 +16,8 @@ import SignUpPage from "./pages/SignUpPage";
 import SupportAssistantPage from "./pages/SupportAssistantPage";
 import MyBookingsPage from "./pages/MyBookingsPage";
 
+import { ThemeProvider } from "@/context/ThemeContext";
+
 const queryClient = new QueryClient();
 
 // Wrapper component to use Clerk hooks
@@ -50,6 +52,10 @@ const AppContent = () => {
   );
 };
 
-const App = () => <AppContent />;
+const App = () => (
+  <ThemeProvider>
+    <AppContent />
+  </ThemeProvider>
+);
 
 export default App;

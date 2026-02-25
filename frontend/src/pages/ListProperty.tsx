@@ -4,6 +4,7 @@ import { ArrowLeft, ImagePlus, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { SignInButton, UserButton, useAuth } from "@clerk/clerk-react";
 import { propertyApi } from "@/lib/api";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const MAX_IMAGES = 4;
 const HOUSE_TYPES = ["Houses", "Rooms", "Farm Houses", "Pool Houses", "Tent Houses", "Cabins", "Shops", "Forest Houses"] as const;
@@ -73,11 +74,14 @@ const ListProperty = () => {
         >
           <ArrowLeft size={16} /> Back
         </Link>
-        {isSignedIn && <UserButton />}
+        <div className="flex items-center gap-3">
+          <ThemeToggle />
+          {isSignedIn && <UserButton />}
+        </div>
       </div>
 
       <div className="mx-auto max-w-4xl rounded-3xl border border-border bg-card p-6 shadow-2xl md:p-8">
-        <h1 className="text-section-title text-3xl md:text-4xl">List your property</h1>
+        <h1 className="text-section-title gradient-title text-3xl md:text-4xl">List your property</h1>
         <p className="mt-2 text-base text-muted-foreground">
           Add a premium home listing with monthly pricing, location and detailed description.
         </p>

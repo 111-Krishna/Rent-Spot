@@ -19,7 +19,7 @@ const PaymentSuccessPage = () => {
 
     if (!sessionId) {
         return (
-            <main className="flex min-h-screen items-center justify-center bg-black bg-grid bg-glow px-4 text-foreground">
+            <main className="flex min-h-screen items-center justify-center bg-background bg-grid bg-glow px-4 text-foreground">
                 <div className="text-center space-y-4">
                     <XCircle className="mx-auto h-16 w-16 text-destructive" />
                     <h1 className="text-2xl font-bold">Invalid Session</h1>
@@ -37,7 +37,7 @@ const PaymentSuccessPage = () => {
 
     if (isLoading) {
         return (
-            <main className="flex min-h-screen items-center justify-center bg-black bg-grid bg-glow px-4 text-foreground">
+            <main className="flex min-h-screen items-center justify-center bg-background bg-grid bg-glow px-4 text-foreground">
                 <div className="text-center space-y-4">
                     <Loader2 className="mx-auto h-16 w-16 animate-spin text-primary" />
                     <h1 className="text-2xl font-bold">Verifying Payment...</h1>
@@ -49,7 +49,7 @@ const PaymentSuccessPage = () => {
 
     if (isError || !isPaid) {
         return (
-            <main className="flex min-h-screen items-center justify-center bg-black bg-grid bg-glow px-4 text-foreground">
+            <main className="flex min-h-screen items-center justify-center bg-background bg-grid bg-glow px-4 text-foreground">
                 <div className="text-center space-y-4">
                     <XCircle className="mx-auto h-16 w-16 text-destructive" />
                     <h1 className="text-2xl font-bold">Payment Not Confirmed</h1>
@@ -68,7 +68,7 @@ const PaymentSuccessPage = () => {
     }
 
     return (
-        <main className="flex min-h-screen items-center justify-center bg-black bg-grid bg-glow px-4 text-foreground">
+        <main className="flex min-h-screen items-center justify-center bg-background bg-grid bg-glow px-4 text-foreground">
             <div className="mx-auto max-w-md rounded-3xl border border-border bg-card p-8 text-center shadow-2xl space-y-6">
                 <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30">
                     <CheckCircle className="h-12 w-12 text-green-600 dark:text-green-400" />

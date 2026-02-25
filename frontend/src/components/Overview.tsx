@@ -34,7 +34,7 @@ const Overview = () => {
       <div className="container mx-auto">
         {/* Section label */}
         <p className="text-label text-muted-foreground mb-4">OVERVIEW</p>
-        <h2 className="text-section-title text-3xl sm:text-4xl md:text-5xl text-foreground max-w-3xl">
+        <h2 className="text-section-title gradient-title text-3xl sm:text-4xl md:text-5xl max-w-3xl">
           Redefining rental platforms through intelligent automation
         </h2>
 

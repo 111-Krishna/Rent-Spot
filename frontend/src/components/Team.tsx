@@ -10,10 +10,10 @@ const team = [
 
 const Team = () => {
   return (
-    <section id="team" className="relative py-24 md:py-32 px-6 bg-black bg-grid bg-glow">
+    <section id="team" className="relative py-24 md:py-32 px-6 bg-background bg-grid bg-glow">
       <div className="container mx-auto">
         <p className="text-label text-muted-foreground mb-4">RESEARCH TEAM</p>
-        <h2 className="text-section-title text-3xl sm:text-4xl md:text-5xl text-foreground max-w-2xl">
+        <h2 className="text-section-title gradient-title text-3xl sm:text-4xl md:text-5xl max-w-2xl">
           Kalasalingam Academy of Research and Education
         </h2>
         <p className="mt-4 text-muted-foreground font-body text-base max-w-xl">

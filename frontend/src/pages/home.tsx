@@ -8,6 +8,7 @@ import SearchSuggestions, {
   SuggestionItem,
 } from "@/components/rental/SearchSuggestions";
 import { propertyApi } from "@/lib/api";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const categories = [
   { label: "Trending", value: "trending" },
@@ -92,7 +93,7 @@ const Home = () => {
   };
 
   return (
-    <main className="min-h-screen bg-black bg-grid bg-glow text-foreground">
+    <main className="min-h-screen bg-background bg-grid bg-glow text-foreground">
       <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur">
         <div className="mx-auto flex flex-wrap items-center justify-between gap-3 px-4 py-3 md:px-8">
           <Link
@@ -152,6 +153,7 @@ const Home = () => {
             >
               <Menu size={18} />
             </Link>
+            <ThemeToggle />
 
             {isSignedIn ? (
               <UserButton />

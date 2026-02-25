@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { SignInButton, SignUpButton, useAuth, UserButton } from "@clerk/clerk-react";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const navLinks = [
   { label: "OVERVIEW", href: "#overview" },
@@ -42,6 +43,7 @@ const Navbar = () => {
 
               </a>
             ))}
+            <ThemeToggle />
             <UserButton />
           </div>
           )
@@ -51,6 +53,7 @@ const Navbar = () => {
               <div className="hidden md:flex items-center gap-10">
 
                 <a href="/support" className="text-label text-muted-foreground hover:text-foreground transition-colors duration-300">SUPPORT</a>
+                <ThemeToggle />
                 <SignInButton />
                 <SignUpButton />
               </div>
@@ -58,6 +61,7 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center gap-3 md:hidden">
+          <ThemeToggle />
           {userId && <UserButton />}
           <button
             onClick={() => setIsOpen(!isOpen)}

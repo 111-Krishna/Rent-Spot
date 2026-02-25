@@ -14,7 +14,7 @@ const Features = () => {
     <section id="features" className="py-24 md:py-32 px-6 section-alt">
       <div className="container mx-auto">
         <p className="text-label text-muted-foreground mb-4">FEATURES</p>
-        <h2 className="text-section-title text-3xl sm:text-4xl md:text-5xl text-foreground max-w-2xl">
+        <h2 className="text-section-title gradient-title text-3xl sm:text-4xl md:text-5xl max-w-2xl">
           Built for intelligence, security & scale
         </h2>
 
