@@ -51,6 +51,7 @@ export const propertyApi = {
     formData.append("description", payload.description);
     formData.append("price", String(payload.price));
     formData.append("location", payload.location);
+    formData.append("houseType", payload.houseType);
     payload.images?.forEach((image) => formData.append("images", image));
 
     return request<Property>("/api/properties", {

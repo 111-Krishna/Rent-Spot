@@ -7,6 +7,11 @@ const propertySchema = new mongoose.Schema(
     description: { type: String },
     price: { type: Number, required: true },
     location: { type: String },
+    houseType: {
+      type: String,
+      enum: ["Houses", "Rooms", "Farm Houses", "Pool Houses", "Tent Houses", "Cabins", "Shops", "Forest Houses"],
+      default: "Houses",
+    },
     images: [{ type: String }],
     houseRules: { type: String, default: "" },
     checkInInstructions: { type: String, default: "" },

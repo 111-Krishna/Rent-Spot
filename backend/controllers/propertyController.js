@@ -4,7 +4,7 @@ import Property from "../models/Property.js";
 // Create a new property (Admin only)
 export const createProperty = async (req, res) => {
   try {
-    const { title, description, price, location, houseRules, checkInInstructions, wifiCode, parkingInstructions } = req.body;
+    const { title, description, price, location, houseType, houseRules, checkInInstructions, wifiCode, parkingInstructions } = req.body;
     const parsedPrice = Number(price);
 
     if (!title?.trim() || Number.isNaN(parsedPrice)) {
@@ -18,6 +18,7 @@ export const createProperty = async (req, res) => {
       description,
       price: parsedPrice,
       location,
+      houseType,
       images,
       houseRules,
       checkInInstructions,
@@ -38,11 +39,11 @@ export const getProperties = async (req, res) => {
     const { search = "" } = req.query;
     const query = search
       ? {
-          $or: [
-            { title: { $regex: search, $options: "i" } },
-            { location: { $regex: search, $options: "i" } },
-          ],
-        }
+        $or: [
+          { title: { $regex: search, $options: "i" } },
+          { location: { $regex: search, $options: "i" } },
+        ],
+      }
       : {};
 
     const properties = await Property.find(query).sort({ createdAt: -1 });

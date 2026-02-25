@@ -4,6 +4,7 @@ export type Property = {
   description?: string;
   price: number;
   location?: string;
+  houseType?: string;
   images?: string[];
   createdAt?: string;
   updatedAt?: string;
@@ -14,5 +15,6 @@ export type PropertyPayload = {
   description: string;
   price: number;
   location: string;
+  houseType: string;
   images?: File[];
 };
