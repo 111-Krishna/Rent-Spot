@@ -19,6 +19,40 @@ export const getCurrentUser = async (req, res) => {
 export const syncClerkUser = async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select("-password");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Update user profile from Clerk data sent by the frontend
+    const { name, email, firstName, lastName, profileImageUrl } = req.body;
+
+    let updated = false;
+    if (name && name !== "User" && user.name !== name) {
+      user.name = name;
+      updated = true;
+    }
+    if (email && !email.endsWith("@clerk.local") && user.email !== email) {
+      user.email = email;
+      updated = true;
+    }
+    if (firstName !== undefined && user.firstName !== firstName) {
+      user.firstName = firstName;
+      updated = true;
+    }
+    if (lastName !== undefined && user.lastName !== lastName) {
+      user.lastName = lastName;
+      updated = true;
+    }
+    if (profileImageUrl !== undefined && user.profileImageUrl !== profileImageUrl) {
+      user.profileImageUrl = profileImageUrl;
+      updated = true;
+    }
+
+    if (updated) {
+      await user.save();
+      console.log(`User profile updated from Clerk: ${user._id} → ${user.name} (${user.email})`);
+    }
+
     res.json({
       message: "Clerk user synced successfully",
       user: {
@@ -81,6 +115,41 @@ export const createTestUser = async (req, res) => {
     });
   } catch (error) {
     console.error("Error creating test user:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Update user role (Admin only)
+export const updateUserRole = async (req, res) => {
+  try {
+    const { role } = req.body;
+    const { id } = req.params;
+
+    if (!["user", "admin"].includes(role)) {
+      return res.status(400).json({ message: "Invalid role. Must be 'user' or 'admin'" });
+    }
+
+    // Prevent admin from demoting themselves
+    if (req.user._id.toString() === id && role !== "admin") {
+      return res.status(400).json({ message: "You cannot demote yourself" });
+    }
+
+    const user = await User.findByIdAndUpdate(
+      id,
+      { role },
+      { new: true }
+    ).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({
+      message: `User role updated to ${role}`,
+      user,
+    });
+  } catch (error) {
+    console.error("Error updating user role:", error);
     res.status(500).json({ message: error.message });
   }
 };

@@ -29,12 +29,11 @@ const upload = multer({ storage });
 router.get("/", getProperties);
 router.get("/:id", getProperty);
 
-// Admin routes
-// router.post("/", protect, authorize("admin"), upload.array("images", 5), createProperty);
+// Admin-only routes
 router.post(
   "/",
   protect,
-  authorize("admin", "user"), // ✅ allow both admin and normal user
+  authorize("admin"),
   upload.array("images", 5),
   createProperty
 );

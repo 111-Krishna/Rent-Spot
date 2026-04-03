@@ -34,10 +34,21 @@ export const authApi = {
     request<{ user: any }>("/api/auth/me", {
       headers: getAuthHeaders(token),
     }),
-  syncClerkUser: (token: string) =>
+  syncClerkUser: (token: string, profile?: { name: string; email: string; firstName: string; lastName: string; profileImageUrl: string | null }) =>
     request<{ message: string; user: any }>("/api/auth/sync", {
       method: "POST",
+      headers: { ...getAuthHeaders(token), "Content-Type": "application/json" },
+      body: JSON.stringify(profile || {}),
+    }),
+  getAllUsers: (token: string) =>
+    request<{ users: any[]; count: number }>("/api/auth/users", {
       headers: getAuthHeaders(token),
+    }),
+  updateUserRole: (userId: string, role: string, token: string) =>
+    request<{ message: string; user: any }>(`/api/auth/users/${userId}/role`, {
+      method: "PUT",
+      headers: { ...getAuthHeaders(token), "Content-Type": "application/json" },
+      body: JSON.stringify({ role }),
     }),
 };
 
@@ -60,6 +71,26 @@ export const propertyApi = {
       body: formData,
     });
   },
+  updateProperty: (propertyId: string, payload: Partial<PropertyPayload>, token: string) => {
+    const formData = new FormData();
+    if (payload.title) formData.append("title", payload.title);
+    if (payload.description) formData.append("description", payload.description);
+    if (payload.price !== undefined) formData.append("price", String(payload.price));
+    if (payload.location) formData.append("location", payload.location);
+    if (payload.houseType) formData.append("houseType", payload.houseType);
+    payload.images?.forEach((image) => formData.append("images", image));
+
+    return request<Property>(`/api/properties/${propertyId}`, {
+      method: "PUT",
+      headers: getAuthHeaders(token),
+      body: formData,
+    });
+  },
+  deleteProperty: (propertyId: string, token: string) =>
+    request<{ message: string }>(`/api/properties/${propertyId}`, {
+      method: "DELETE",
+      headers: getAuthHeaders(token),
+    }),
 };
 
 export const bookingApi = {

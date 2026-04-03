@@ -15,6 +15,7 @@ import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
 import SupportAssistantPage from "./pages/SupportAssistantPage";
 import MyBookingsPage from "./pages/MyBookingsPage";
+import AdminDashboard from "./pages/AdminDashboard";
 
 import { ThemeProvider } from "@/context/ThemeContext";
 
@@ -41,6 +42,7 @@ const AppContent = () => {
             <Route path="/owner/list-property" element={<ListProperty />} />
             <Route path="/my-bookings" element={<MyBookingsPage />} />
             <Route path="/support" element={<SupportAssistantPage />} />
+            <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/sign-in/*" element={<SignInPage />} />
             <Route path="/sign-up/*" element={<SignUpPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

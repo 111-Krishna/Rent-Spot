@@ -1,19 +1,48 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, MapPin, Tag } from "lucide-react";
+import { ArrowLeft, MapPin, Pencil, Tag, Trash2 } from "lucide-react";
+import { useAuth } from "@clerk/clerk-react";
 import { propertyApi } from "@/lib/api";
+import { useUserRole } from "@/hooks/use-user-role";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
 
 const PropertyDetails = () => {
   const { id = "" } = useParams();
   const navigate = useNavigate();
+  const { getToken } = useAuth();
+  const { isAdmin } = useUserRole();
+  const queryClient = useQueryClient();
   const [selectedImage, setSelectedImage] = useState(0);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const { data: property, isLoading, error } = useQuery({
     queryKey: ["property", id],
     queryFn: () => propertyApi.getPropertyById(id),
     enabled: Boolean(id),
   });
+
+  const deleteMutation = useMutation({
+    mutationFn: async () => {
+      const token = await getToken();
+      if (!token) throw new Error("Not authenticated");
+      return propertyApi.deleteProperty(id, token);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["properties"] });
+      navigate("/home");
+    },
+  });
+
+  const handleDelete = () => {
+    setShowDeleteConfirm(true);
+  };
+
+  const confirmDelete = () => {
+    deleteMutation.mutate(undefined, {
+      onSettled: () => setShowDeleteConfirm(false),
+    });
+  };
 
   if (isLoading) return <p className="p-6">Loading property details...</p>;
   if (error || !property) return <p className="p-6 text-destructive">Unable to load property.</p>;
@@ -29,12 +58,35 @@ const PropertyDetails = () => {
   return (
     <main className="min-h-screen bg-background bg-grid bg-glow px-4 py-8 text-foreground md:px-10">
       <div className="mx-auto max-w-6xl space-y-8">
-        <Link
-          to="/home"
-          className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-5 py-2 text-lg hover:border-primary/40"
-        >
-          <ArrowLeft size={18} /> Back
-        </Link>
+        <div className="flex items-center justify-between">
+          <Link
+            to="/home"
+            className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-5 py-2 text-lg hover:border-primary/40"
+          >
+            <ArrowLeft size={18} /> Back
+          </Link>
+
+          {/* Admin controls */}
+          {isAdmin && (
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => navigate(`/owner/list-property?edit=${property._id}`)}
+                className="inline-flex items-center gap-2 rounded-xl bg-blue-500/10 px-4 py-2.5 text-sm font-medium text-blue-500 transition hover:bg-blue-500/20"
+              >
+                <Pencil size={15} /> Edit
+              </button>
+              <button
+                type="button"
+                onClick={handleDelete}
+                disabled={deleteMutation.isPending}
+                className="inline-flex items-center gap-2 rounded-xl bg-red-500/10 px-4 py-2.5 text-sm font-medium text-red-500 transition hover:bg-red-500/20 disabled:opacity-50"
+              >
+                <Trash2 size={15} /> {deleteMutation.isPending ? "Deleting..." : "Delete"}
+              </button>
+            </div>
+          )}
+        </div>
 
         <section>
           <h1 className="text-section-title gradient-title text-4xl md:text-5xl">{property.title}</h1>
@@ -92,6 +144,17 @@ const PropertyDetails = () => {
           </button>
         </div>
       </div>
+
+      <ConfirmDialog
+        open={showDeleteConfirm}
+        title="Delete Listing"
+        description="Are you sure you want to delete this listing? This action cannot be undone."
+        confirmLabel="Delete"
+        variant="danger"
+        loading={deleteMutation.isPending}
+        onConfirm={confirmDelete}
+        onCancel={() => setShowDeleteConfirm(false)}
+      />
     </main>
   );
 };

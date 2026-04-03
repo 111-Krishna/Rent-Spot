@@ -1,14 +1,16 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Bot, CalendarDays, Menu, Search } from "lucide-react";
+import { Bot, CalendarDays, Menu, Search, Shield, Plus } from "lucide-react";
 import { SignInButton, UserButton, useAuth } from "@clerk/clerk-react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import PropertyCard from "@/components/rental/PropertyCard";
 import SearchSuggestions, {
   SuggestionItem,
 } from "@/components/rental/SearchSuggestions";
 import { propertyApi } from "@/lib/api";
 import ThemeToggle from "@/components/ThemeToggle";
+import { useUserRole } from "@/hooks/use-user-role";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
 
 const categories = [
   { label: "Trending", value: "trending" },
@@ -35,11 +37,14 @@ const categoryKeywords: Record<string, string[]> = {
 };
 
 const Home = () => {
-  const { isSignedIn } = useAuth();
+  const { isSignedIn, getToken } = useAuth();
+  const { isAdmin } = useUserRole();
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("trending");
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const {
     data = [],
@@ -50,6 +55,33 @@ const Home = () => {
     queryKey: ["properties", search],
     queryFn: () => propertyApi.getProperties(search),
   });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (propertyId: string) => {
+      const token = await getToken();
+      if (!token) throw new Error("Not authenticated");
+      return propertyApi.deleteProperty(propertyId, token);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["properties"] });
+    },
+  });
+
+  const handleDelete = useCallback((propertyId: string) => {
+    setDeleteTarget(propertyId);
+  }, []);
+
+  const confirmDelete = useCallback(() => {
+    if (deleteTarget) {
+      deleteMutation.mutate(deleteTarget, {
+        onSettled: () => setDeleteTarget(null),
+      });
+    }
+  }, [deleteTarget, deleteMutation]);
+
+  const handleEdit = (property: any) => {
+    navigate(`/owner/list-property?edit=${property._id}`);
+  };
 
   const suggestions = useMemo<SuggestionItem[]>(() => {
     if (!search.trim()) return [];
@@ -147,12 +179,27 @@ const Home = () => {
             >
               <CalendarDays size={18} />
             </Link>
-            <Link
-              to="/owner/list-property"
-              className="hidden text-sm text-muted-foreground md:block"
-            >
-              <Menu size={18} />
-            </Link>
+
+            {/* Admin-only links */}
+            {isAdmin && (
+              <>
+                <Link
+                  to="/owner/list-property"
+                  className="hidden text-sm text-muted-foreground md:block"
+                  title="Create listing"
+                >
+                  <Plus size={18} />
+                </Link>
+                <Link
+                  to="/admin"
+                  className="hidden text-sm text-muted-foreground md:block"
+                  title="Admin dashboard"
+                >
+                  <Shield size={18} />
+                </Link>
+              </>
+            )}
+
             <ThemeToggle />
 
             {isSignedIn ? (
@@ -200,10 +247,27 @@ const Home = () => {
 
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {filteredProperties.map((property) => (
-            <PropertyCard key={property._id} property={property} />
+            <PropertyCard
+              key={property._id}
+              property={property}
+              isAdmin={isAdmin}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
           ))}
         </div>
       </section>
+
+      <ConfirmDialog
+        open={deleteTarget !== null}
+        title="Delete Listing"
+        description="Are you sure you want to delete this listing? This action cannot be undone."
+        confirmLabel="Delete"
+        variant="danger"
+        loading={deleteMutation.isPending}
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </main>
   );
 };
